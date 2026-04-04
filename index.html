@@ -10,13 +10,40 @@
             --resolve: #a1d586; --inspiration: #48b4be; --background: #010a13;
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 0px; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--background); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px; 
+        }
         
-        .container { width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .container { position: relative; width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
         
+        /* REROLL BUTTON STYLE */
+        .reroll-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+        .reroll-btn:hover { opacity: 1; background: rgba(200, 155, 60, 0.1); }
+
         h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; grid-column: 1 / -1;}
         
         .role-selector { display: flex; justify-content: center; margin-bottom: 25px; gap: 15px; grid-column: 1 / -1; }
+        
         .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         .role-btn:hover { background: var(--gold); color: var(--background); }
         
@@ -41,6 +68,18 @@
         .skill-icon { width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 4px; display: block; margin-bottom: 4px; }
         .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
 
+        #loading-screen::after {
+            content: "";
+            width: 40px;
+            height: 40px;
+            margin-top: 20px;
+            border: 4px solid #1e2328;
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
         .build-list { list-style: none; padding: 0; margin: 0; }
         .build-list li { padding: 7px 0; border-bottom: 1px solid #1e2328; font-size: 0.95rem; display: flex; align-items: center; }
@@ -52,7 +91,13 @@
 </head>
 <body>
 
+<div id="loading-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 5px; flex-direction: column;">
+    Loading...
+</div>
+
 <div class="container">
+    <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
+
     <h1>Ultimate Bravery</h1>
     <div class="role-selector">
         <button class="role-btn" onclick="generate('TOP')">TOP</button>
@@ -101,6 +146,7 @@
     const VERSION = "16.7.1"; 
     const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
     let runeData = [];
+    let lastSelectedRole = null; // Track most recent role
 
     const itemToId = {
         "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
@@ -184,136 +230,155 @@
         }
     }
 
-    async function generate(role) {
-        if (runeData.length === 0) await loadRunes();
-
-        const champ = getRandom(data.champions);
-        const champId = getChampId(champ);
-        let skillIcons = [{key:'Q', img:''}, {key:'W', img:''}, {key:'E', img:''}]; 
-        try {
-            const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
-            const json = await resp.json();
-            const spells = json.data[champId].spells;
-            skillIcons = [
-                { key: 'Q', img: spells[0].image.full },
-                { key: 'W', img: spells[1].image.full },
-                { key: 'E', img: spells[2].image.full }
-            ];
-        } catch (e) { console.error("Skills fetch failed", e); }
-
-        // SUMMONERS
-        let s1, s2;
-        if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
-        else {
-            const pool = data.summs.filter(s => s !== "SummonerSmite");
-            s1 = getRandom(pool); s2 = getRandom(pool.filter(s => s !== s1));
-        }
-
-        // RUNE LOGIC
-        const primaryTree = getRandom(runeData);
-        const secondaryTree = getRandom(runeData.filter(t => t.id !== primaryTree.id));
-
-        const keystone = getRandom(primaryTree.slots[0].runes);
-        const p1 = getRandom(primaryTree.slots[1].runes);
-        const p2 = getRandom(primaryTree.slots[2].runes);
-        const p3 = getRandom(primaryTree.slots[3].runes);
-
-        // Pick 2 unique secondary rows
-        const sRows = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, 2);
-        const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
-        const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
-
-        // RENDER UI
-        document.getElementById('results').style.display = 'grid'; 
-        document.getElementById('res-champ').innerText = champ;
-        document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
-
-        document.getElementById('res-summs').innerHTML = `
-            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png">
-            <span style="color: var(--gold); font-weight: bold; margin: 0 5px;">/</span>
-            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png">
-        `;
-
-        const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
-        document.getElementById('res-skills').innerHTML = shuffledSkills.map((s, i) => `
-            <div class="skill-box">
-                <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
-                <span class="skill-letter">${s.key}</span>
-            </div>
-${i < 2 ? '<span style="color:var(--gold); font-weight:bold; vertical-align: middle; margin-bottom: 30px;">&gt;</span>' : ''}
-        `).join('');
-
-        document.getElementById('res-runes').innerHTML = `
-            <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-                <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
-                ${primaryTree.name}
-            </div>
-            <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
-                <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
-            </div>
-            <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
-                <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
-                <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
-                <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
-            </div>
-
-            <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
-                <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
-                ${secondaryTree.name}
-            </div>
-            <div style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
-                <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
-                <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
-            </div>
-
-            <div class="stat-nodes">
-                <span class="shard-label">Shards</span>
-                <div style="display:flex; flex-direction:column; gap:5px;">
-                    ${data.stats.map(row => {
-                        const shard = getRandom(row);
-                        return `<div class="minor-runes">
-                            <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> 
-                            ${shard.n}
-                        </div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-
-        // ITEMS
-        let build = [];
-        let pool = [...data.items];
-        if (role === 'JG') build.push(getRandom(data.jgStarters));
-        else if (role === 'SUPP') build.push("World Atlas");
-        else build.push(getRandom(data.starters));
-
-        if (role === 'SUPP') {
-            build.push(getRandom(data.suppFinals));
-            let core = getRandom(pool); build.push(core); pool = pool.filter(i => i !== core);
-            build.push(getRandom(data.boots));
-            for(let i=0; i<3; i++) {
-                let item = getRandom(pool); build.push(item); pool = pool.filter(it => it !== item);
-            }
+    // NEW REROLL FUNCTION
+    function reroll() {
+        if (lastSelectedRole) {
+            generate(lastSelectedRole);
         } else {
-            let first = getRandom(pool); build.push(first); pool = pool.filter(i => i !== first);
-            build.push(getRandom(data.boots));
-            let count = (role === 'ADC') ? 5 : 4;
-            for(let i=0; i<count; i++) {
-                let item = getRandom(pool); build.push(item); pool = pool.filter(it => it !== item);
-            }
+            alert("Pick a role first!");
         }
-
-        document.getElementById('res-items').innerHTML = build.map((item, index) => {
-            const id = itemToId[item] || "1001";
-            return `<li>
-                <span style="width: 25px; display: inline-block; opacity: 0.5; font-size: 0.8rem;">${index}.</span>
-                <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${id}.png"> 
-                ${item}
-            </li>`;
-        }).join('');
     }
 
-    // Load initial data
+    async function generate(role) {
+        lastSelectedRole = role; // Store the role for rerolling
+        const loader = document.getElementById('loading-screen');
+        loader.style.display = 'flex';
+
+        setTimeout(async () => {
+            if (runeData.length === 0) await loadRunes();
+
+            const champ = getRandom(data.champions);
+            const champId = getChampId(champ);
+            let skillIcons = [{key:'Q', img:''}, {key:'W', img:''}, {key:'E', img:''}]; 
+            try {
+                const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
+                const json = await resp.json();
+                const spells = json.data[champId].spells;
+                skillIcons = [
+                    { key: 'Q', img: spells[0].image.full },
+                    { key: 'W', img: spells[1].image.full },
+                    { key: 'E', img: spells[2].image.full }
+                ];
+            } catch (e) { console.error("Skills fetch failed", e); }
+
+            let s1, s2;
+            if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
+            else {
+                const pool = data.summs.filter(s => s !== "SummonerSmite");
+                s1 = getRandom(pool); s2 = getRandom(pool.filter(s => s !== s1));
+            }
+
+            const primaryTree = getRandom(runeData);
+            const secondaryTree = getRandom(runeData.filter(t => t.id !== primaryTree.id));
+
+            const keystone = getRandom(primaryTree.slots[0].runes);
+            const p1 = getRandom(primaryTree.slots[1].runes);
+            const p2 = getRandom(primaryTree.slots[2].runes);
+            const p3 = getRandom(primaryTree.slots[3].runes);
+
+            const sRows = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, 2);
+            const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
+            const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
+
+            document.getElementById('results').style.display = 'grid'; 
+            document.getElementById('res-champ').innerText = champ;
+            document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
+
+            document.getElementById('res-summs').innerHTML = `
+                <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png">
+                <span style="color: var(--gold); font-weight: bold; margin: 0 5px;">/</span>
+                <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png">
+            `;
+
+            const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
+            document.getElementById('res-skills').innerHTML = shuffledSkills.map((s, i) => `
+                <div class="skill-box">
+                    <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
+                    <span class="skill-letter">${s.key}</span>
+                </div>
+                ${i < 2 ? '<span style="color:var(--gold); font-weight:bold; vertical-align: middle; margin-bottom: 30px;">&gt;</span>' : ''}
+            `).join('');
+
+            document.getElementById('res-runes').innerHTML = `
+                <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                    <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
+                    ${primaryTree.name}
+                </div>
+                <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
+                    <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
+                    <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
+                    <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
+                    <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
+                </div>
+
+                <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
+                    <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
+                    ${secondaryTree.name}
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
+                    <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
+                    <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
+                </div>
+
+                <div class="stat-nodes">
+                    <span class="shard-label">Shards</span>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        ${data.stats.map(row => {
+                            const shard = getRandom(row);
+                            return `<div class="minor-runes">
+                                <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> 
+                                ${shard.n}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            let build = [];
+            let pool = [...data.items];
+
+            if (role === 'JG') build.push(getRandom(data.jgStarters));
+            else if (role === 'SUPP') build.push("World Atlas");
+            else build.push(getRandom(data.starters));
+
+            build.push(getRandom(data.boots));
+
+            if (role === 'SUPP') {
+                build.push(getRandom(data.suppFinals));
+                for(let i = 0; i < 4; i++) {
+                    let item = getRandom(pool);
+                    build.push(item);
+                    pool = pool.filter(it => it !== item);
+                }
+            } else if (role === 'ADC') {
+                for(let i = 0; i < 6; i++) {
+                    let item = getRandom(pool);
+                    build.push(item);
+                    pool = pool.filter(it => it !== item);
+                }
+            } else {
+                for(let i = 0; i < 5; i++) {
+                    let item = getRandom(pool);
+                    build.push(item);
+                    pool = pool.filter(it => it !== item);
+                }
+            }
+
+            document.getElementById('res-items').innerHTML = build.map((item, index) => {
+                const id = itemToId[item] || "1001";
+                return `<li>
+                    <span style="width: 25px; display: inline-block; opacity: 0.5; font-size: 0.8rem;">${index}.</span>
+                    <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${id}.png"> 
+                    ${item}
+                </li>`;
+            }).join('');
+
+            loader.style.display = 'none';
+        }, 75); 
+    }
+
     loadRunes();
 </script>
 </body>
