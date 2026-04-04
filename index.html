@@ -10,9 +10,9 @@
             --resolve: #a1d586; --inspiration: #48b4be; --background: #010a13;
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 0px; }
         
-        .container { width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .container { width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
         
         h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; grid-column: 1 / -1;}
         
@@ -31,9 +31,7 @@
         .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; opacity: 0.8; }
         
         .icon-inline { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; border-radius: 4px; border: 1px solid rgba(200, 155, 60, 0.3); }
-        
-        /* Updated: Removed grayscale to restore color */
-        .icon-rune { width: 20px; height: 20px; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
+        .icon-rune { width: 22px; height: 22px; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
         
         .icon-large { width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 4px; margin-right: 15px; float: left; }
         .champ-container { overflow: hidden; display: flex; align-items: center; }
@@ -101,6 +99,8 @@
 
 <script>
     const VERSION = "16.7.1"; 
+    const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
+    let runeData = [];
 
     const itemToId = {
         "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
@@ -154,43 +154,6 @@
         jgStarters: ["Gustwalker Hatchling", "Mosstomper Seedling", "Scorchclaw Pup"],
         suppFinals: ["Celestial Opposition", "Dream Maker", "Zaz'Zak's Realmspike", "Bloodsong", "Sleigh of Hand"],
         summs: ["SummonerFlash", "SummonerDot", "SummonerExhaust", "SummonerTeleport", "SummonerHaste", "SummonerHeal", "SummonerBarrier", "SummonerBoost", "SummonerSmite"],
-        runes: {
-            "Precision": { 
-                icon: "7201_Precision",
-                keystones: [{n: "Press the Attack", i: "PressTheAttack"}, {n: "Fleet Footwork", i: "FleetFootwork"}, {n: "Conqueror", i: "Conqueror"}], 
-                row1: [{n: "Absorb Life", i: "AbsorbLife"}, {n: "Triumph", i: "Triumph"}, {n: "Presence of Mind", i: "PresenceOfMind"}], 
-                row2: [{n: "Alacrity", i: "LegendAlacrity"}, {n: "Tenacity", i: "LegendTenacity"}, {n: "Bloodline", i: "LegendBloodline"}], 
-                row3: [{n: "Coup de Grace", i: "CoupDeGrace"}, {n: "Cut Down", i: "CutDown"}, {n: "Last Stand", i: "LastStand"}] 
-            },
-            "Domination": { 
-                icon: "7200_Domination",
-                keystones: [{n: "Electrocute", i: "Electrocute"}, {n: "Dark Harvest", i: "DarkHarvest"}, {n: "Hail of Blades", i: "HailOfBlades"}], 
-                row1: [{n: "Cheap Shot", i: "CheapShot"}, {n: "Taste of Blood", i: "GreenTerror_TasteOfBlood"}, {n: "Sudden Impact", i: "SuddenImpact"}], 
-                row2: [{n: "Zombie Ward", i: "ZombieWard"}, {n: "Ghost Poro", i: "GhostPoro"}, {n: "Eyeball Collection", i: "EyeballCollection"}], 
-                row3: [{n: "Treasure Hunter", i: "TreasureHunter"}, {n: "Ingenious Hunter", i: "IngeniousHunter"}, {n: "Relentless Hunter", i: "RelentlessHunter"}, {n: "Ultimate Hunter", i: "UltimateHunter"}] 
-            },
-            "Sorcery": { 
-                icon: "7202_Sorcery",
-                keystones: [{n: "Summon Aery", i: "SummonAery"}, {n: "Arcane Comet", i: "ArcaneComet"}, {n: "Phase Rush", i: "PhaseRush"}], 
-                row1: [{n: "Axiom Arcanist", i: "AxiomArcanist"}, {n: "Manaflow Band", i: "ManaflowBand"}, {n: "Nimbus Cloak", i: "6361"}], 
-                row2: [{n: "Transcendence", i: "Transcendence"}, {n: "Celerity", i: "Celerity"}, {n: "Absolute Focus", i: "AbsoluteFocus"}], 
-                row3: [{n: "Scorch", i: "Scorch"}, {n: "Waterwalking", i: "Waterwalking"}, {n: "Gathering Storm", i: "GatheringStorm"}] 
-            },
-            "Resolve": { 
-                icon: "7204_Resolve",
-                keystones: [{n: "Grasp of the Undying", i: "GraspOfTheUndying"}, {n: "Aftershock", i: "VeteranAftershock"}, {n: "Guardian", i: "Guardian"}], 
-                row1: [{n: "Demolish", i: "Demolish"}, {n: "Font of Life", i: "FontOfLife"}, {n: "Shield Bash", i: "MirrorShell"}], 
-                row2: [{n: "Conditioning", i: "Conditioning"}, {n: "Second Wind", i: "SecondWind"}, {n: "Bone Plating", i: "BonePlating"}], 
-                row3: [{n: "Overgrowth", i: "Overgrowth"}, {n: "Revitalize", i: "Revitalize"}, {n: "Unflinching", i: "Unflinching"}] 
-            },
-            "Inspiration": { 
-                icon: "7203_Whimsy",
-                keystones: [{n: "Glacial Augment", i: "GlacialAugment"}, {n: "Unsealed Spellbook", i: "UnsealedSpellbook"}, {n: "First Strike", i: "FirstStrike"}], 
-                row1: [{n: "Hextech Flashtraption", i: "HextechFlashtraption"}, {n: "Magical Footwear", i: "MagicalFootwear"}, {n: "Cash Back", i: "CashBack"}], 
-                row2: [{n: "Triple Tonic", i: "TripleTonic"}, {n: "Time Warp Tonic", i: "TimeWarpTonic"}, {n: "Biscuit Delivery", i: "BiscuitDelivery"}], 
-                row3: [{n: "Cosmic Insight", i: "CosmicInsight"}, {n: "Approach Velocity", i: "ApproachVelocity"}, {n: "Jack of All Trades", i: "JackOfAllTrades/JackofAllTrades2"}] 
-            }
-        },
         stats: [
             [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Attack Speed", i: "StatModsAttackSpeedIcon"}, {n: "Ability Haste", i: "StatModsCDRScalingIcon"}], 
             [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Move Speed", i: "StatModsMovementSpeedIcon"}, {n: "Scaling Health", i: "StatModsHealthScalingIcon"}], 
@@ -212,10 +175,21 @@
 
     function getChampId(name) { return idMap[name] || name.replace(/[^a-zA-Z0-9]/g, ""); }
 
+    async function loadRunes() {
+        try {
+            const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/runesReforged.json`);
+            runeData = await resp.json();
+        } catch (e) {
+            console.error("Failed to load runes", e);
+        }
+    }
+
     async function generate(role) {
+        if (runeData.length === 0) await loadRunes();
+
         const champ = getRandom(data.champions);
         const champId = getChampId(champ);
-        let skillIcons = ["Q", "W", "E"]; 
+        let skillIcons = [{key:'Q', img:''}, {key:'W', img:''}, {key:'E', img:''}]; 
         try {
             const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
             const json = await resp.json();
@@ -225,24 +199,39 @@
                 { key: 'W', img: spells[1].image.full },
                 { key: 'E', img: spells[2].image.full }
             ];
-        } catch (e) {
-            console.error("Failed to fetch skills", e);
+        } catch (e) { console.error("Skills fetch failed", e); }
+
+        // SUMMONERS
+        let s1, s2;
+        if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
+        else {
+            const pool = data.summs.filter(s => s !== "SummonerSmite");
+            s1 = getRandom(pool); s2 = getRandom(pool.filter(s => s !== s1));
         }
 
+        // RUNE LOGIC
+        const primaryTree = getRandom(runeData);
+        const secondaryTree = getRandom(runeData.filter(t => t.id !== primaryTree.id));
+
+        const keystone = getRandom(primaryTree.slots[0].runes);
+        const p1 = getRandom(primaryTree.slots[1].runes);
+        const p2 = getRandom(primaryTree.slots[2].runes);
+        const p3 = getRandom(primaryTree.slots[3].runes);
+
+        // Pick 2 unique secondary rows
+        const sRows = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, 2);
+        const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
+        const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
+
+        // RENDER UI
         document.getElementById('results').style.display = 'grid'; 
         document.getElementById('res-champ').innerText = champ;
         document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
 
-        let s1, s2;
-        if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
-        else {
-            const noSmitePool = data.summs.filter(s => s !== "SummonerSmite");
-            s1 = getRandom(noSmitePool); s2 = getRandom(noSmitePool.filter(s => s !== s1));
-        }
         document.getElementById('res-summs').innerHTML = `
-            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png" title="${s1}">
+            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png">
             <span style="color: var(--gold); font-weight: bold; margin: 0 5px;">/</span>
-            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png" title="${s2}">
+            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png">
         `;
 
         const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
@@ -251,56 +240,39 @@
                 <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
                 <span class="skill-letter">${s.key}</span>
             </div>
-            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold;">&gt;</span>' : ''}
+${i < 2 ? '<span style="color:var(--gold); font-weight:bold; vertical-align: middle; margin-bottom: 30px;">&gt;</span>' : ''}
         `).join('');
 
-        const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/";
-        const trees = Object.keys(data.runes);
-        const pKey = getRandom(trees);
-        const sKey = getRandom(trees.filter(t => t !== pKey));
-        const pTree = data.runes[pKey];
-        const sTree = data.runes[sKey];
-
-        const keystone = getRandom(pTree.keystones);
-        const pRow1 = getRandom(pTree.row1);
-        const pRow2 = getRandom(pTree.row2);
-        const pRow3 = getRandom(pTree.row3);
-        const sRows = [sTree.row1, sTree.row2, sTree.row3].sort(() => 0.5 - Math.random()).slice(0, 2);
-        const sRune1 = getRandom(sRows[0]);
-        const sRune2 = getRandom(sRows[1]);
-
         document.getElementById('res-runes').innerHTML = `
-            <div class="${pKey}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:5px;">
-                <img src="${runeBase}${pTree.icon}.png" style="width:20px; filter:brightness(1.5);"> 
-                ${pKey} (Primary)
+            <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
+                ${primaryTree.name}
             </div>
-            
             <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
-                <img src="${runeBase}${pKey}/${keystone.i}/${keystone.i}.png" class="icon-rune"> ${keystone.n}
+                <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
+            </div>
+            <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
+                <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
             </div>
 
-            <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
-                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow1.i}/${pRow1.i}.png" class="icon-rune"> ${pRow1.n}</div>
-                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow2.i}/${pRow2.i}.png" class="icon-rune"> ${pRow2.n}</div>
-                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow3.i}/${pRow3.i}.png" class="icon-rune"> ${pRow3.n}</div>
+            <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
+                <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
+                ${secondaryTree.name}
             </div>
-
-            <div class="${sKey}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
-                <img src="${runeBase}${sTree.icon}.png" style="width:20px; filter:brightness(1.5);"> 
-                ${sKey} (Secondary)
-            </div>
-            <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
-                <div class="minor-runes"><img src="${runeBase}${sKey}/${sRune1.i}/${sRune1.i}.png" class="icon-rune"> ${sRune1.n}</div>
-                <div class="minor-runes"><img src="${runeBase}${sKey}/${sRune2.i}/${sRune2.i}.png" class="icon-rune"> ${sRune2.n}</div>
+            <div style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
+                <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
             </div>
 
             <div class="stat-nodes">
                 <span class="shard-label">Shards</span>
-                <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px;">
+                <div style="display:flex; flex-direction:column; gap:5px;">
                     ${data.stats.map(row => {
                         const shard = getRandom(row);
                         return `<div class="minor-runes">
-                            <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:16px; margin-right:10px; border-radius:50%;"> 
+                            <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> 
                             ${shard.n}
                         </div>`;
                     }).join('')}
@@ -308,6 +280,7 @@
             </div>
         `;
 
+        // ITEMS
         let build = [];
         let pool = [...data.items];
         if (role === 'JG') build.push(getRandom(data.jgStarters));
@@ -339,6 +312,9 @@
             </li>`;
         }).join('');
     }
+
+    // Load initial data
+    loadRunes();
 </script>
 </body>
 </html>
