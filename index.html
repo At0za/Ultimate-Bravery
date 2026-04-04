@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Bravery - Modern Shards</title>
+    <title>Ultimate Bravery - 2026 Edition</title>
     <style>
         :root {
             --precision: #c8aa6e; --domination: #d0021b; --sorcery: #6c75ff;
             --resolve: #a1d586; --inspiration: #48b4be; --background: #010a13;
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; justify-content: center; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .container { width: 100%; max-width: 900px; background: var(--card-bg); border: 2px solid var(--gold); padding: 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
         h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; grid-column: 1 / -1;}
         
@@ -40,6 +40,7 @@
         .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 2px; }
         
         .skill-pri { font-size: 1.2rem; font-weight: bold; color: #fff; letter-spacing: 2px; }
+        .footer-legal { margin-top: 40px; font-size: 0.7rem; color: #555; text-align: center; max-width: 700px; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -85,10 +86,15 @@
     </div>
 </div>
 
+<div class="footer-legal">
+    [Ultimate Bravery] is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+</div>
+
 <script>
-    const VERSION = "14.5.1"; 
+    const VERSION = "16.7.1"; 
 
     const itemToId = {
+        "Luden's Echo": "6655", 
         "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
         "Diadem of Songs": "2530", "Dusk and Dawn": "2510", "Endless Hunger": "2517", 
         "Fiendhunter Bolts": "2512", "Hexoptics C44": "2523", "Protoplasm Harness": "2525", 
@@ -104,7 +110,7 @@
         "Celestial Opposition": "3869", "Dream Maker": "3870", 
         "Zaz'Zak's Realmspike": "3871", "Bloodsong": "3877", "Sleigh of Hand": "3876",
         "Rabadon's Deathcap": "3089", "Zhonya's Hourglass": "3157", "Banshee's Veil": "3102",
-        "Liandry's Torment": "6653", "Blackfire Torch": "2503", "Ludens Companion": "3280", 
+        "Liandry's Torment": "6653", "Blackfire Torch": "2503", 
         "Archangel's Staff": "3003", "Malignance": "3118", "Shadowflame": "4645", 
         "Stormsurge": "4646", "Cryptbloom": "3137", "Void Staff": "3135", 
         "Nashor's Tooth": "3115", "Lich Bane": "3100", "Cosmic Drive": "4629", 
@@ -136,7 +142,7 @@
 
     const data = {
         champions: ["Aatrox", "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu", "Anivia", "Annie", "Aphelios", "Ashe", "Aurelion Sol", "Aurora", "Azir", "Bard", "Bel'Veth", "Blitzcrank", "Brand", "Braum", "Briar", "Caitlyn", "Camille", "Cassiopeia", "Cho'Gath", "Corki", "Darius", "Diana", "Dr. Mundo", "Draven", "Ekko", "Elise", "Evelynn", "Ezreal", "Fiddlesticks", "Fiora", "Fizz", "Galio", "Gangplank", "Garen", "Gnar", "Gragas", "Graves", "Gwen", "Hecarim", "Heimerdinger", "Hwei", "Illaoi", "Irelia", "Ivern", "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin", "Jinx", "K'Sante", "Kai'Sa", "Kalista", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle", "Kayn", "Kennen", "Kha'Zix", "Kindred", "Kled", "Kog'Maw", "LeBlanc", "Lee Sin", "Leona", "Lillia", "Lissandra", "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "Master Yi", "Mel", "Milio", "Miss Fortune", "Mordekaiser", "Morgana", "Naafiri", "Nami", "Nasus", "Nautilus", "Neeko", "Nidalee", "Nilah", "Nocturne", "Nunu & Willump", "Olaf", "Orianna", "Ornn", "Pantheon", "Poppy", "Pyke", "Qiyana", "Quinn", "Rakan", "Rammus", "Rek'Sai", "Rell", "Renata Glasc", "Renekton", "Rengar", "Riven", "Rumble", "Ryze", "Samira", "Sejuani", "Senna", "Seraphine", "Sett", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Skarner", "Smolder", "Sona", "Soraka", "Swain", "Sylas", "Syndra", "Tahm Kench", "Taliyah", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere", "Twisted Fate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vel'Koz", "Vex", "Vi", "Viego", "Viktor", "Vladimir", "Volibear", "Warwick", "Wukong", "Xayah", "Xerath", "Xin Zhao", "Yasuo", "Yone", "Yorick", "Yunara", "Yuumi", "Zaahen", "Zac", "Zed", "Zeri", "Ziggs", "Zilean", "Zoe", "Zyra"],
-        items: ["Actualizer", "Bandlepipes", "Bastionbreaker", "Diadem of Songs", "Dusk and Dawn", "Endless Hunger", "Fiendhunter Bolts", "Hexoptics C44", "Protoplasm Harness", "Hextech Gunblade", "Stormrazor", "Overlord's Bloodmail", "Yun Tal Wildarrows", "Ardent Censer", "Staff of Flowing Water", "Mikael's Blessing", "Redemption", "Knight's Vow", "Zeke's Convergence", "Locket of the Iron Solari", "Imperial Mandate", "Echoes of Helia", "Moonstone Renewer", "Dawncore", "Vigilant Wardstone", "Shurelya's Battlesong", "Trailblazer", "Rabadon's Deathcap", "Zhonya's Hourglass", "Banshee's Veil", "Liandry's Torment", "Blackfire Torch", "Ludens Companion", "Archangel's Staff", "Malignance", "Shadowflame", "Stormsurge", "Cryptbloom", "Void Staff", "Nashor's Tooth", "Lich Bane", "Cosmic Drive", "Morellonomicon", "Rylai's Crystal Scepter", "Infinity Edge", "The Collector", "Lord Dominik's Regards", "Mortal Reminder", "Kraken Slayer", "Navori Flickerblade", "Phantom Dancer", "Statikk Shiv", "Rapid Firecannon", "Blade of the Ruined King", "Terminus", "Wit's End", "Guinsoo's Rageblade", "Immortal Shieldbow", "Bloodthirster", "Essence Reaver", "Youmuu's Ghostblade", "Hubris", "Opportunity", "Axiom Arc", "Edge of Night", "Serylda's Grudge", "Umbral Glaive", "Profane Hydra", "Voltaic Cyclosword", "Heartsteel", "Warmog's Armor", "Thornmail", "Sunfire Aegis", "Hollow Radiance", "Unending Despair", "Jak'Sho, The Protean", "Kaenic Rookern", "Spirit Visage", "Force of Nature", "Frozen Heart", "Randuin's Omen", "Dead Man's Plate", "Black Cleaver", "Trinity Force", "Stridebreaker", "Titanic Hydra", "Ravenous Hydra", "Spear of Shojin", "Sundered Sky", "Eclipse", "Sterak's Gage", "Hullbreaker", "Experimental Hexplate", "Death's Dance", "Maw of Malmortius", "Guardian Angel"],
+        items: ["Luden's Echo", "Actualizer", "Bandlepipes", "Bastionbreaker", "Diadem of Songs", "Dusk and Dawn", "Endless Hunger", "Fiendhunter Bolts", "Hexoptics C44", "Protoplasm Harness", "Hextech Gunblade", "Stormrazor", "Overlord's Bloodmail", "Yun Tal Wildarrows", "Ardent Censer", "Staff of Flowing Water", "Mikael's Blessing", "Redemption", "Knight's Vow", "Zeke's Convergence", "Locket of the Iron Solari", "Imperial Mandate", "Echoes of Helia", "Moonstone Renewer", "Dawncore", "Vigilant Wardstone", "Shurelya's Battlesong", "Trailblazer", "Rabadon's Deathcap", "Zhonya's Hourglass", "Banshee's Veil", "Liandry's Torment", "Blackfire Torch", "Archangel's Staff", "Malignance", "Shadowflame", "Stormsurge", "Cryptbloom", "Void Staff", "Nashor's Tooth", "Lich Bane", "Cosmic Drive", "Morellonomicon", "Rylai's Crystal Scepter", "Infinity Edge", "The Collector", "Lord Dominik's Regards", "Mortal Reminder", "Kraken Slayer", "Navori Flickerblade", "Phantom Dancer", "Statikk Shiv", "Rapid Firecannon", "Blade of the Ruined King", "Terminus", "Wit's End", "Guinsoo's Rageblade", "Immortal Shieldbow", "Bloodthirster", "Essence Reaver", "Youmuu's Ghostblade", "Hubris", "Opportunity", "Axiom Arc", "Edge of Night", "Serylda's Grudge", "Umbral Glaive", "Profane Hydra", "Voltaic Cyclosword", "Heartsteel", "Warmog's Armor", "Thornmail", "Sunfire Aegis", "Hollow Radiance", "Unending Despair", "Jak'Sho, The Protean", "Kaenic Rookern", "Spirit Visage", "Force of Nature", "Frozen Heart", "Randuin's Omen", "Dead Man's Plate", "Black Cleaver", "Trinity Force", "Stridebreaker", "Titanic Hydra", "Ravenous Hydra", "Spear of Shojin", "Sundered Sky", "Eclipse", "Sterak's Gage", "Hullbreaker", "Experimental Hexplate", "Death's Dance", "Maw of Malmortius", "Guardian Angel"],
         boots: ["Berserker's Greaves", "Ionian Boots of Lucidity", "Mercury's Treads", "Plated Steelcaps", "Sorcerer's Shoes", "Swiftness Boots"],
         starters: ["Doran's Blade", "Doran's Ring", "Doran's Shield", "Dark Seal", "Cull", "Tear of the Goddess"],
         jgStarters: ["Gustwalker Hatchling", "Mosstomper Seedling", "Scorchclaw Pup"],
@@ -159,10 +165,31 @@
     function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
     function getChampImg(name) {
-        let cleanName = name.replace(/[^a-zA-Z0-9]/g, ""); 
-        if (name === "Wukong") cleanName = "MonkeyKing";
-        if (name === "Nunu & Willump") cleanName = "Nunu";
-        return `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${cleanName}.png`;
+        // Precise mapping using Data Dragon 'id' fields
+        const idMap = {
+            "Aurelion Sol": "AurelionSol",
+            "Bel'Veth": "Belveth",
+            "Cho'Gath": "Chogath",
+            "Dr. Mundo": "DrMundo",
+            "Jarvan IV": "JarvanIV",
+            "K'Sante": "Ksante",
+            "Kai'Sa": "Kaisa",
+            "Kha'Zix": "Khazix",
+            "LeBlanc": "Leblanc",
+            "Lee Sin": "LeeSin",
+            "Master Yi": "MasterYi",
+            "Miss Fortune": "MissFortune",
+            "Nunu & Willump": "Nunu",
+            "Renata Glasc": "Renata",
+            "Tahm Kench": "TahmKench",
+            "Twisted Fate": "TwistedFate",
+            "Vel'Koz": "Velkoz",
+            "Xin Zhao": "XinZhao",
+            "Wukong": "MonkeyKing"
+        };
+
+        const id = idMap[name] || name.replace(/[^a-zA-Z0-9]/g, ""); 
+        return `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${id}.png`;
     }
 
     function getSummImg(name) {
@@ -177,12 +204,10 @@
     function generate(role) {
         document.getElementById('results').style.display = 'grid'; 
         
-        // Champion Generation
         const champ = getRandom(data.champions);
         document.getElementById('res-champ').innerText = champ;
         document.getElementById('img-champ').src = getChampImg(champ);
 
-        // Summoner Spells Generation
         let s1, s2;
         if (role === 'JG') {
             s1 = "SummonerSmite";
@@ -198,12 +223,10 @@
             <img class="icon-inline" src="${getSummImg(s2)}" title="${s2}">
         `;
 
-        // Skill Priority Generation
         const skills = ["Q", "W", "E"];
         const shuffledSkills = skills.sort(() => Math.random() - 0.5);
         document.getElementById('res-skills').innerText = shuffledSkills.join(" > ");
 
-        // Runes Generation
         const trees = Object.keys(data.runes);
         const pKey = getRandom(trees);
         const sKey = getRandom(trees.filter(t => t !== pKey));
@@ -224,7 +247,6 @@
             </div>
         `;
 
-        // Items Build Logic
         let build = [];
         let pool = [...data.items];
 
