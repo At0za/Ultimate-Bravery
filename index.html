@@ -11,36 +11,45 @@
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
         }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--background); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .container { width: 100%; max-width: 900px; background: var(--card-bg); border: 2px solid var(--gold); padding: 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
+        .container { width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
         h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; grid-column: 1 / -1;}
         
         .role-selector { display: flex; justify-content: center; margin-bottom: 25px; gap: 15px; grid-column: 1 / -1; }
         .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         .role-btn:hover { background: var(--gold); color: var(--background); }
         
-        .result-section { display: none; grid-column: 1 / -1; border-top: 1px solid #3c3c41; padding-top: 25px; grid-template-columns: 1fr 1fr; gap: 30px; animation: fadeIn 0.4s ease; }
+        .result-section { display: none; grid-column: 1 / -1; border-top: 1px solid #3c3c41; padding-top: 25px; grid-template-columns: 1fr 1fr 1fr; gap: 30px; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .left-column { grid-column: 1; text-align: left; }
-        .right-column { grid-column: 2; text-align: left; }
-        .result-item { margin-bottom: 20px; }
+        .middle-column { grid-column: 2; text-align: left; border-left: 1px solid #1e2328; border-right: 1px solid #1e2328; padding: 0 20px; }
+        .right-column { grid-column: 3; text-align: left; }
         
+        .result-item { margin-bottom: 20px; }
         .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; opacity: 0.8; }
         
         .icon-inline { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; border-radius: 4px; border: 1px solid rgba(200, 155, 60, 0.3); }
+        
+        /* Updated: Removed grayscale to restore color */
+        .icon-rune { width: 20px; height: 20px; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
+        
         .icon-large { width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 4px; margin-right: 15px; float: left; }
         .champ-container { overflow: hidden; display: flex; align-items: center; }
 
+        .skill-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .skill-box { text-align: center; }
+        .skill-icon { width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 4px; display: block; margin-bottom: 4px; }
+        .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
+
         .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
         .build-list { list-style: none; padding: 0; margin: 0; }
-        .build-list li { padding: 7px 0; border-bottom: 1px solid #1e2328; font-size: 1rem; display: flex; align-items: center; }
-        .minor-runes { font-size: 0.85rem; color: #fff; margin-left: 10px; opacity: 0.9; }
+        .build-list li { padding: 7px 0; border-bottom: 1px solid #1e2328; font-size: 0.95rem; display: flex; align-items: center; }
         
+        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 8px; display: flex; align-items: center; }
         .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 12px; }
-        .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 2px; }
-        
-        .skill-pri { font-size: 1.2rem; font-weight: bold; color: #fff; letter-spacing: 2px; }
-        .footer-legal { margin-top: 40px; font-size: 0.7rem; color: #555; text-align: center; max-width: 700px; line-height: 1.4; }
+        .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 10px; border-top: 1px solid #1e2328; padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -61,7 +70,7 @@
                 <span class="label">Champion</span>
                 <div class="champ-container">
                     <img id="img-champ" class="icon-large" src="" alt="">
-                    <span id="res-champ" style="font-size: 1.8rem; font-weight: bold; color: #fff;"></span>
+                    <span id="res-champ" style="font-size: 1.5rem; font-weight: bold; color: #fff;"></span>
                 </div>
             </div>
             <div class="result-item">
@@ -70,13 +79,17 @@
             </div>
             <div class="result-item">
                 <span class="label">Skill Priority</span>
-                <div id="res-skills" class="skill-pri"></div>
+                <div id="res-skills" class="skill-container"></div>
             </div>
+        </div>
+
+        <div class="middle-column">
             <div class="result-item">
                 <span class="label">Rune Page</span>
                 <div id="res-runes"></div>
             </div>
         </div>
+
         <div class="right-column">
             <div class="result-item">
                 <span class="label">Item Build</span>
@@ -86,21 +99,15 @@
     </div>
 </div>
 
-<div class="footer-legal">
-    [Ultimate Bravery] is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
-</div>
-
 <script>
     const VERSION = "16.7.1"; 
 
     const itemToId = {
-        "Luden's Echo": "6655", 
-        "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
+        "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
         "Diadem of Songs": "2530", "Dusk and Dawn": "2510", "Endless Hunger": "2517", 
         "Fiendhunter Bolts": "2512", "Hexoptics C44": "2523", "Protoplasm Harness": "2525", 
         "Hextech Gunblade": "3146", "Stormrazor": "3097", "Overlord's Bloodmail": "2501",
-        "Yun Tal Wildarrows": "3032",
-        "Doran's Blade": "1055", "Doran's Ring": "1056", "Doran's Shield": "1054",
+        "Yun Tal Wildarrows": "3032", "Doran's Blade": "1055", "Doran's Ring": "1056", "Doran's Shield": "1054",
         "Dark Seal": "1082", "Cull": "1083", "Tear of the Goddess": "3070",
         "World Atlas": "3865", "Gustwalker Hatchling": "1102", 
         "Mosstomper Seedling": "1103", "Scorchclaw Pup": "1101",
@@ -123,8 +130,7 @@
         "Essence Reaver": "3508", "Youmuu's Ghostblade": "3142", "Hubris": "6697", 
         "Opportunity": "6701", "Axiom Arc": "6696", "Edge of Night": "3814", 
         "Serylda's Grudge": "6694", "Umbral Glaive": "3179", "Profane Hydra": "6698", 
-        "Voltaic Cyclosword": "6699",
-        "Heartsteel": "3084", "Warmog's Armor": "3083", "Thornmail": "3075", 
+        "Voltaic Cyclosword": "6699", "Heartsteel": "3084", "Warmog's Armor": "3083", "Thornmail": "3075", 
         "Sunfire Aegis": "3068", "Hollow Radiance": "6664", "Unending Despair": "2502", 
         "Jak'Sho, The Protean": "6665", "Kaenic Rookern": "2504", "Spirit Visage": "3065", 
         "Force of Nature": "4401", "Frozen Heart": "3110", "Randuin's Omen": "3143", 
@@ -149,107 +155,161 @@
         suppFinals: ["Celestial Opposition", "Dream Maker", "Zaz'Zak's Realmspike", "Bloodsong", "Sleigh of Hand"],
         summs: ["SummonerFlash", "SummonerDot", "SummonerExhaust", "SummonerTeleport", "SummonerHaste", "SummonerHeal", "SummonerBarrier", "SummonerBoost", "SummonerSmite"],
         runes: {
-            "Precision": { keystones: ["Press the Attack", "Fleet Footwork", "Conqueror"], row1: ["Absorb Life", "Triumph", "Presence of Mind"], row2: ["Alacrity", "Tenacity", "Bloodline"], row3: ["Coup de Grace", "Cut Down", "Last Stand"] },
-            "Domination": { keystones: ["Electrocute", "Dark Harvest", "Hail of Blades"], row1: ["Cheap Shot", "Taste of Blood", "Sudden Impact"], row2: ["Zombie Ward", "Ghost Poro", "Eyeball Collection"], row3: ["Treasure Hunter", "Ingenious Hunter", "Relentless Hunter", "Ultimate Hunter"] },
-            "Sorcery": { keystones: ["Summon Aery", "Arcane Comet", "Phase Rush"], row1: ["Nullifying Orb", "Manaflow Band", "Nimbus Clock"], row2: ["Transcendence", "Celerity", "Absolute Focus"], row3: ["Scorch", "Waterwalking", "Gathering Storm"] },
-            "Resolve": { keystones: ["Grasp of the Undying", "Aftershock", "Guardian"], row1: ["Demolish", "Font of Life", "Shield Bash"], row2: ["Conditioning", "Second Wind", "Bone Plating"], row3: ["Overgrowth", "Revitalize", "Unflinching"] },
-            "Inspiration": { keystones: ["Glacial Augment", "Unsealed Spellbook", "First Strike"], row1: ["Hextech Flashtraption", "Magical Footwear", "Cash Back"], row2: ["Triple Tonic", "Time Warp Tonic", "Biscuit Delivery"], row3: ["Cosmic Insight", "Approach Velocity", "Jack of All Trades"] }
+            "Precision": { 
+                icon: "7201_Precision",
+                keystones: [{n: "Press the Attack", i: "PressTheAttack"}, {n: "Fleet Footwork", i: "FleetFootwork"}, {n: "Conqueror", i: "Conqueror"}], 
+                row1: [{n: "Absorb Life", i: "AbsorbLife"}, {n: "Triumph", i: "Triumph"}, {n: "Presence of Mind", i: "PresenceOfMind"}], 
+                row2: [{n: "Alacrity", i: "LegendAlacrity"}, {n: "Tenacity", i: "LegendTenacity"}, {n: "Bloodline", i: "LegendBloodline"}], 
+                row3: [{n: "Coup de Grace", i: "CoupDeGrace"}, {n: "Cut Down", i: "CutDown"}, {n: "Last Stand", i: "LastStand"}] 
+            },
+            "Domination": { 
+                icon: "7200_Domination",
+                keystones: [{n: "Electrocute", i: "Electrocute"}, {n: "Dark Harvest", i: "DarkHarvest"}, {n: "Hail of Blades", i: "HailOfBlades"}], 
+                row1: [{n: "Cheap Shot", i: "CheapShot"}, {n: "Taste of Blood", i: "GreenTerror_TasteOfBlood"}, {n: "Sudden Impact", i: "SuddenImpact"}], 
+                row2: [{n: "Zombie Ward", i: "ZombieWard"}, {n: "Ghost Poro", i: "GhostPoro"}, {n: "Eyeball Collection", i: "EyeballCollection"}], 
+                row3: [{n: "Treasure Hunter", i: "TreasureHunter"}, {n: "Ingenious Hunter", i: "IngeniousHunter"}, {n: "Relentless Hunter", i: "RelentlessHunter"}, {n: "Ultimate Hunter", i: "UltimateHunter"}] 
+            },
+            "Sorcery": { 
+                icon: "7202_Sorcery",
+                keystones: [{n: "Summon Aery", i: "SummonAery"}, {n: "Arcane Comet", i: "ArcaneComet"}, {n: "Phase Rush", i: "PhaseRush"}], 
+                row1: [{n: "Axiom Arcanist", i: "AxiomArcanist"}, {n: "Manaflow Band", i: "ManaflowBand"}, {n: "Nimbus Cloak", i: "6361"}], 
+                row2: [{n: "Transcendence", i: "Transcendence"}, {n: "Celerity", i: "Celerity"}, {n: "Absolute Focus", i: "AbsoluteFocus"}], 
+                row3: [{n: "Scorch", i: "Scorch"}, {n: "Waterwalking", i: "Waterwalking"}, {n: "Gathering Storm", i: "GatheringStorm"}] 
+            },
+            "Resolve": { 
+                icon: "7204_Resolve",
+                keystones: [{n: "Grasp of the Undying", i: "GraspOfTheUndying"}, {n: "Aftershock", i: "VeteranAftershock"}, {n: "Guardian", i: "Guardian"}], 
+                row1: [{n: "Demolish", i: "Demolish"}, {n: "Font of Life", i: "FontOfLife"}, {n: "Shield Bash", i: "MirrorShell"}], 
+                row2: [{n: "Conditioning", i: "Conditioning"}, {n: "Second Wind", i: "SecondWind"}, {n: "Bone Plating", i: "BonePlating"}], 
+                row3: [{n: "Overgrowth", i: "Overgrowth"}, {n: "Revitalize", i: "Revitalize"}, {n: "Unflinching", i: "Unflinching"}] 
+            },
+            "Inspiration": { 
+                icon: "7203_Whimsy",
+                keystones: [{n: "Glacial Augment", i: "GlacialAugment"}, {n: "Unsealed Spellbook", i: "UnsealedSpellbook"}, {n: "First Strike", i: "FirstStrike"}], 
+                row1: [{n: "Hextech Flashtraption", i: "HextechFlashtraption"}, {n: "Magical Footwear", i: "MagicalFootwear"}, {n: "Cash Back", i: "CashBack"}], 
+                row2: [{n: "Triple Tonic", i: "TripleTonic"}, {n: "Time Warp Tonic", i: "TimeWarpTonic"}, {n: "Biscuit Delivery", i: "BiscuitDelivery"}], 
+                row3: [{n: "Cosmic Insight", i: "CosmicInsight"}, {n: "Approach Velocity", i: "ApproachVelocity"}, {n: "Jack of All Trades", i: "JackOfAllTrades/JackofAllTrades2"}] 
+            }
         },
         stats: [
-            ["Adaptive Force", "Attack Speed", "Ability Haste"], 
-            ["Adaptive Force", "Move Speed", "Scaling Health"], 
-            ["Flat Health", "Tenacity & Slow Resist", "Scaling Health"] 
+            [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Attack Speed", i: "StatModsAttackSpeedIcon"}, {n: "Ability Haste", i: "StatModsCDRScalingIcon"}], 
+            [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Move Speed", i: "StatModsMovementSpeedIcon"}, {n: "Scaling Health", i: "StatModsHealthScalingIcon"}], 
+            [{n: "Flat Health", i: "StatModsHealthPlusIcon"}, {n: "Tenacity & Slow Resist", i: "StatModsTenacityIcon"}, {n: "Scaling Health", i: "StatModsHealthScalingIcon"}] 
         ]
     };
 
     function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-    function getChampImg(name) {
-        // Precise mapping using Data Dragon 'id' fields
-        const idMap = {
-            "Aurelion Sol": "AurelionSol",
-            "Bel'Veth": "Belveth",
-            "Cho'Gath": "Chogath",
-            "Dr. Mundo": "DrMundo",
-            "Jarvan IV": "JarvanIV",
-            "K'Sante": "Ksante",
-            "Kai'Sa": "Kaisa",
-            "Kha'Zix": "Khazix",
-            "LeBlanc": "Leblanc",
-            "Lee Sin": "LeeSin",
-            "Master Yi": "MasterYi",
-            "Miss Fortune": "MissFortune",
-            "Nunu & Willump": "Nunu",
-            "Renata Glasc": "Renata",
-            "Tahm Kench": "TahmKench",
-            "Twisted Fate": "TwistedFate",
-            "Vel'Koz": "Velkoz",
-            "Xin Zhao": "XinZhao",
-            "Wukong": "MonkeyKing"
-        };
+    const idMap = {
+        "Aurelion Sol": "AurelionSol", "Bel'Veth": "Belveth", "Cho'Gath": "Chogath",
+        "Dr. Mundo": "DrMundo", "Jarvan IV": "JarvanIV", "K'Sante": "Ksante",
+        "Kai'Sa": "Kaisa", "Kha'Zix": "Khazix", "LeBlanc": "Leblanc",
+        "Lee Sin": "LeeSin", "Master Yi": "MasterYi", "Miss Fortune": "MissFortune",
+        "Nunu & Willump": "Nunu", "Renata Glasc": "Renata", "Tahm Kench": "TahmKench",
+        "Twisted Fate": "TwistedFate", "Vel'Koz": "Velkoz", "Xin Zhao": "XinZhao",
+        "Wukong": "MonkeyKing"
+    };
 
-        const id = idMap[name] || name.replace(/[^a-zA-Z0-9]/g, ""); 
-        return `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${id}.png`;
-    }
+    function getChampId(name) { return idMap[name] || name.replace(/[^a-zA-Z0-9]/g, ""); }
 
-    function getSummImg(name) {
-        return `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${name}.png`;
-    }
-
-    function getItemImg(name) {
-        const id = itemToId[name] || "1001"; 
-        return `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${id}.png`;
-    }
-
-    function generate(role) {
-        document.getElementById('results').style.display = 'grid'; 
-        
+    async function generate(role) {
         const champ = getRandom(data.champions);
-        document.getElementById('res-champ').innerText = champ;
-        document.getElementById('img-champ').src = getChampImg(champ);
-
-        let s1, s2;
-        if (role === 'JG') {
-            s1 = "SummonerSmite";
-            s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite"));
-        } else {
-            const noSmitePool = data.summs.filter(s => s !== "SummonerSmite");
-            s1 = getRandom(noSmitePool);
-            s2 = getRandom(noSmitePool.filter(s => s !== s1));
+        const champId = getChampId(champ);
+        let skillIcons = ["Q", "W", "E"]; 
+        try {
+            const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
+            const json = await resp.json();
+            const spells = json.data[champId].spells;
+            skillIcons = [
+                { key: 'Q', img: spells[0].image.full },
+                { key: 'W', img: spells[1].image.full },
+                { key: 'E', img: spells[2].image.full }
+            ];
+        } catch (e) {
+            console.error("Failed to fetch skills", e);
         }
 
+        document.getElementById('results').style.display = 'grid'; 
+        document.getElementById('res-champ').innerText = champ;
+        document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
+
+        let s1, s2;
+        if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
+        else {
+            const noSmitePool = data.summs.filter(s => s !== "SummonerSmite");
+            s1 = getRandom(noSmitePool); s2 = getRandom(noSmitePool.filter(s => s !== s1));
+        }
         document.getElementById('res-summs').innerHTML = `
-            <img class="icon-inline" src="${getSummImg(s1)}" title="${s1}">
-            <img class="icon-inline" src="${getSummImg(s2)}" title="${s2}">
+            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png" title="${s1}">
+            <span style="color: var(--gold); font-weight: bold; margin: 0 5px;">/</span>
+            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png" title="${s2}">
         `;
 
-        const skills = ["Q", "W", "E"];
-        const shuffledSkills = skills.sort(() => Math.random() - 0.5);
-        document.getElementById('res-skills').innerText = shuffledSkills.join(" > ");
+        const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
+        document.getElementById('res-skills').innerHTML = shuffledSkills.map((s, i) => `
+            <div class="skill-box">
+                <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
+                <span class="skill-letter">${s.key}</span>
+            </div>
+            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold;">&gt;</span>' : ''}
+        `).join('');
 
+        const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/";
         const trees = Object.keys(data.runes);
         const pKey = getRandom(trees);
         const sKey = getRandom(trees.filter(t => t !== pKey));
         const pTree = data.runes[pKey];
         const sTree = data.runes[sKey];
-        const secondaryRows = [sTree.row1, sTree.row2, sTree.row3].sort(() => 0.5 - Math.random()).slice(0, 2);
+
+        const keystone = getRandom(pTree.keystones);
+        const pRow1 = getRandom(pTree.row1);
+        const pRow2 = getRandom(pTree.row2);
+        const pRow3 = getRandom(pTree.row3);
+        const sRows = [sTree.row1, sTree.row2, sTree.row3].sort(() => 0.5 - Math.random()).slice(0, 2);
+        const sRune1 = getRandom(sRows[0]);
+        const sRune2 = getRandom(sRows[1]);
 
         document.getElementById('res-runes').innerHTML = `
-            <div class="${pKey}" style="font-weight:bold;">✦ ${getRandom(pTree.keystones)} - ${pKey} (Primary)</div>
-            <div class="minor-runes">● ${getRandom(pTree.row1)} | ● ${getRandom(pTree.row2)} | ● ${getRandom(pTree.row3)}</div>
-            <div class="${sKey}" style="margin-top:8px; font-weight:bold;">${sKey} (Secondary)</div>
-            <div class="minor-runes">● ${getRandom(secondaryRows[0])} | ● ${getRandom(secondaryRows[1])}</div>
+            <div class="${pKey}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+                <img src="${runeBase}${pTree.icon}.png" style="width:20px; filter:brightness(1.5);"> 
+                ${pKey} (Primary)
+            </div>
+            
+            <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
+                <img src="${runeBase}${pKey}/${keystone.i}/${keystone.i}.png" class="icon-rune"> ${keystone.n}
+            </div>
+
+            <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
+                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow1.i}/${pRow1.i}.png" class="icon-rune"> ${pRow1.n}</div>
+                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow2.i}/${pRow2.i}.png" class="icon-rune"> ${pRow2.n}</div>
+                <div class="minor-runes"><img src="${runeBase}${pKey}/${pRow3.i}/${pRow3.i}.png" class="icon-rune"> ${pRow3.n}</div>
+            </div>
+
+            <div class="${sKey}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
+                <img src="${runeBase}${sTree.icon}.png" style="width:20px; filter:brightness(1.5);"> 
+                ${sKey} (Secondary)
+            </div>
+            <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
+                <div class="minor-runes"><img src="${runeBase}${sKey}/${sRune1.i}/${sRune1.i}.png" class="icon-rune"> ${sRune1.n}</div>
+                <div class="minor-runes"><img src="${runeBase}${sKey}/${sRune2.i}/${sRune2.i}.png" class="icon-rune"> ${sRune2.n}</div>
+            </div>
+
             <div class="stat-nodes">
                 <span class="shard-label">Shards</span>
-                <div class="minor-runes" style="margin-left: 0;">
-                    ● ${data.stats.map(row => getRandom(row)).join(' | ● ')}
+                <div class="minor-runes-container" style="display:flex; flex-direction:column; gap:5px;">
+                    ${data.stats.map(row => {
+                        const shard = getRandom(row);
+                        return `<div class="minor-runes">
+                            <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:16px; margin-right:10px; border-radius:50%;"> 
+                            ${shard.n}
+                        </div>`;
+                    }).join('')}
                 </div>
             </div>
         `;
 
         let build = [];
         let pool = [...data.items];
-
         if (role === 'JG') build.push(getRandom(data.jgStarters));
         else if (role === 'SUPP') build.push("World Atlas");
         else build.push(getRandom(data.starters));
@@ -270,13 +330,14 @@
             }
         }
 
-        document.getElementById('res-items').innerHTML = build.map((item, index) => `
-            <li>
-                <span style="width: 25px; display: inline-block; opacity: 0.5;">${index}.</span>
-                <img class="icon-inline" src="${getItemImg(item)}"> 
+        document.getElementById('res-items').innerHTML = build.map((item, index) => {
+            const id = itemToId[item] || "1001";
+            return `<li>
+                <span style="width: 25px; display: inline-block; opacity: 0.5; font-size: 0.8rem;">${index}.</span>
+                <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${id}.png"> 
                 ${item}
-            </li>
-        `).join('');
+            </li>`;
+        }).join('');
     }
 </script>
 </body>
