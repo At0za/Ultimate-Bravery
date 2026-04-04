@@ -27,7 +27,6 @@
         
         .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; opacity: 0.8; }
         
-        /* Icon Styling */
         .icon-inline { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; border-radius: 4px; border: 1px solid rgba(200, 155, 60, 0.3); }
         .icon-large { width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 4px; margin-right: 15px; float: left; }
         .champ-container { overflow: hidden; display: flex; align-items: center; }
@@ -37,9 +36,10 @@
         .build-list li { padding: 7px 0; border-bottom: 1px solid #1e2328; font-size: 1rem; display: flex; align-items: center; }
         .minor-runes { font-size: 0.85rem; color: #fff; margin-left: 10px; opacity: 0.9; }
         
-        /* Updated stat-nodes for structured shards */
         .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 12px; }
         .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 2px; }
+        
+        .skill-pri { font-size: 1.2rem; font-weight: bold; color: #fff; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -66,6 +66,10 @@
             <div class="result-item">
                 <span class="label">Summoner Spells</span>
                 <div id="res-summs" style="display: flex; gap: 10px; align-items: center;"></div>
+            </div>
+            <div class="result-item">
+                <span class="label">Skill Priority</span>
+                <div id="res-skills" class="skill-pri"></div>
             </div>
             <div class="result-item">
                 <span class="label">Rune Page</span>
@@ -178,7 +182,7 @@
         document.getElementById('res-champ').innerText = champ;
         document.getElementById('img-champ').src = getChampImg(champ);
 
-        // Summoner Spells Generation (Fixed Smite logic)
+        // Summoner Spells Generation
         let s1, s2;
         if (role === 'JG') {
             s1 = "SummonerSmite";
@@ -194,7 +198,12 @@
             <img class="icon-inline" src="${getSummImg(s2)}" title="${s2}">
         `;
 
-        // Runes Generation (Restructured Shards)
+        // Skill Priority Generation
+        const skills = ["Q", "W", "E"];
+        const shuffledSkills = skills.sort(() => Math.random() - 0.5);
+        document.getElementById('res-skills').innerText = shuffledSkills.join(" > ");
+
+        // Runes Generation
         const trees = Object.keys(data.runes);
         const pKey = getRandom(trees);
         const sKey = getRandom(trees.filter(t => t !== pKey));
