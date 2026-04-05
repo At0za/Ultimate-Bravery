@@ -9,6 +9,7 @@
             --precision: #c8aa6e; --domination: #d0021b; --sorcery: #6c75ff;
             --resolve: #a1d586; --inspiration: #48b4be; --background: #010a13;
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
+            font-size: calc(14px + 0.3vw); 
         }
         
         html, body {
@@ -24,7 +25,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 20px; 
+            padding: 1.25rem; 
             box-sizing: border-box;
             overflow-y: auto;
         }
@@ -32,133 +33,167 @@
         .container { 
             position: relative; 
             width: 100%; 
-            max-width: 1200px; 
+            max-width: 85rem; /* Increased max-width for 4 columns */
             background: var(--card-bg); 
-            border: 2px solid var(--gold); 
-            padding: 10px 10px; 
-            border-radius: 10px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
+            border: 0.125rem solid var(--gold); 
+            padding: 0.625rem; 
+            border-radius: 0.625rem; 
+            box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.7); 
             box-sizing: border-box;
             margin: auto; 
         }
         
-.reroll-btn {
-    position: absolute;
-    top: 20px;
-    padding: 12px 25px; /* Match role-btn padding */
-    background: #1e2328; /* Match role-btn background */
-    border: 1px solid var(--gold); /* Match role-btn border */
-    color: var(--gold); /* Match role-btn color */
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.9rem; /* Match role-btn font-size */
-    z-index: 10;
-    transition: all 0.2s ease; /* Match role-btn transition */
-    opacity: 1; /* Reset opacity from original style */
-}
-/* Hover style matches role-btn hover style */
-.reroll-btn:hover {
-    background: var(--gold);
-    color: var(--background);
-}
+        .reroll-btn {
+            position: absolute;
+            top: 1.25rem;
+            padding: 0.75rem 1.5rem;
+            background: #1e2328;
+            border: 0.06rem solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
 
-/* Specific position for Reroll (top-left) */
-.reroll-btn:not(.team-btn-top) {
-    left: 20px;
-}
+        .reroll-btn:hover { background: var(--gold); color: var(--background); }
+        .reroll-btn:not(.team-btn-top) { left: 1.25rem; }
 
-        h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { 
+            text-align: center; 
+            color: var(--gold); 
+            margin-top: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.125rem; 
+            font-size: 2rem;
+        }
         
-        .role-selector { display: flex; justify-content: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap; }
+        .role-selector { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 1.5rem; 
+            gap: 0.9rem; 
+            flex-wrap: wrap; 
+        }
         
-        .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+        .role-btn { 
+            padding: 0.75rem 1.5rem; 
+            background: #1e2328; 
+            border: 0.06rem solid var(--gold); 
+            color: var(--gold); 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            font-weight: bold; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+        }
+
         .role-btn:hover { background: var(--gold); color: var(--background); }
-.team-btn-top {
-    right: 20px;
-    border-color: #00cfbc;
-    color: #00cfbc;
-}
 
-/* Hover effect for the cyan Team button */
-.team-btn-top:hover {
-    background: #00cfbc;
-    color: #010a13;
-}
+        .team-btn-top {
+            right: 1.25rem;
+            border-color: #00cfbc;
+            color: #00cfbc;
+        }
+
+        .team-btn-top:hover { background: #00cfbc; color: #010a13; }
         
         #results-container { width: 100%; }
 
         .result-card { 
             display: grid; 
-            border-top: 1px solid #3c3c41; 
-            padding-top: 25px; 
-            margin-bottom: 40px;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 30px; 
+            border-top: 0.06rem solid #3c3c41; 
+            padding-top: 1.5rem; 
+            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr; 
+            gap: 1.2rem; 
             animation: fadeIn 0.4s ease; 
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(0.6rem); } to { opacity: 1; transform: translateY(0); } }
         
-        .column { text-align: left; }
+        .column { text-align: left; min-width: 0; }
         
         @media (min-width: 992px) {
-            .result-card { grid-template-columns: 1fr 1fr 1fr; }
-            .middle-border { border-left: 1px solid #1e2328; border-right: 1px solid #1e2328; padding: 0 20px; }
+            /* 4-COLUMN LAYOUT: Champ, Primary, Secondary/Shards, Items */
+            .result-card { grid-template-columns: 1.1fr 0.6fr 0.8fr 1.1fr; }
+            /* Removed vertical middle-borders as requested */
+            .column { padding: 0 0.5rem; }
+/* Removes the line between Primary and Secondary runes */
+.column:nth-child(2), 
+.column:nth-child(4) { 
+    border-left: 0.06rem solid #3c3c41; 
+    padding-left: 1.5rem;
+}
+
+/* Ensures the third column (Secondary Runes) doesn't have a line */
+.column:nth-child(3) {
+    border-left: none;
+    padding-left: 1.5rem; 
+}
         }
 
-@media (max-width: 600px) {
-    .reroll-btn { 
-        position: relative; 
-        top: 0 !important; 
-        left: 0 !important; 
-        width: 100%; 
-        margin: 0 auto 15px auto; /* Centers the button and adds bottom spacing */
-        display: block;           /* Ensures it takes up its own line */
-        box-sizing: border-box;   /* CRITICAL: Keeps the 100% width inside the gold box */
-    }
-    
-    .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 10px; }
-    .icon-large { width: 48px; height: 48px; }
-    .res-champ { font-size: 1.2rem !important; }
-    .container { margin-top: 10px; margin-bottom: 10px; padding: 15px; }
-}
+        @media (max-width: 991px) and (min-width: 601px) {
+            .result-card { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            :root { font-size: 14px; }
+            .reroll-btn { 
+                position: relative; 
+                top: 0 !important; 
+                left: 0 !important; 
+                right: 0 !important;
+                width: 100%; 
+                margin: 0 auto 0.9rem auto; 
+                display: block;            
+                box-sizing: border-box;    
+            }
+            .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 0.6rem; }
+            .icon-large { width: 3rem; height: 3rem; }
+            .res-champ { font-size: 1.2rem !important; }
+            .container { margin-top: 0.6rem; margin-bottom: 0.6rem; padding: 0.9rem; }
+        }
         
-        .result-item { margin-bottom: 20px; }
-        .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; opacity: 0.8; }
+        .result-item { margin-bottom: 1.25rem; }
+        .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.3rem; text-transform: uppercase; opacity: 0.8; }
         
-        .icon-inline { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; border-radius: 4px; border: 1px solid rgba(200, 155, 60, 0.3); }
-        .icon-rune { width: 22px; height: 22px; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
+        .icon-inline { width: 1.5rem; height: 1.5rem; vertical-align: middle; margin-right: 0.5rem; border-radius: 0.25rem; border: 0.06rem solid rgba(200, 155, 60, 0.3); }
+        .icon-rune { width: 1.35rem; height: 1.35rem; vertical-align: middle; margin-right: 0.6rem; border-radius: 50%; }
         
-        .icon-large { width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 4px; margin-right: 15px; float: left; }
+        .icon-large { width: 4rem; height: 4rem; border: 0.125rem solid var(--gold); border-radius: 0.25rem; margin-right: 0.9rem; float: left; }
         .champ-container { overflow: hidden; display: flex; align-items: center; }
 
-        .skill-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .skill-container { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem; flex-wrap: wrap; }
         .skill-box { text-align: center; }
-        .skill-icon { width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 4px; display: block; margin-bottom: 4px; }
+        .skill-icon { width: 2.6rem; height: 2.6rem; border: 0.06rem solid var(--gold); border-radius: 0.25rem; display: block; margin-bottom: 0.25rem; }
         .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
 
         #loading-screen { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; 
             align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; 
-            text-transform: uppercase; letter-spacing: 5px; flex-direction: column; 
+            text-transform: uppercase; letter-spacing: 0.3rem; flex-direction: column; 
         }
 
         #loading-screen::after {
-            content: ""; width: 40px; height: 40px; margin-top: 20px;
-            border: 4px solid #1e2328; border-top: 4px solid var(--gold);
+            content: ""; width: 2.5rem; height: 2.5rem; margin-top: 1.25rem;
+            border: 0.25rem solid #1e2328; border-top: 0.25rem solid var(--gold);
             border-radius: 50%; animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
-        .build-list { list-style: none; padding: 0; margin: 0; }
-        .build-list li { padding: 5px 0; border-bottom: 1px solid #1e2328; font-size: 0.9rem; display: flex; align-items: center; }
         
-        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 6px; display: flex; align-items: center; }
-        .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 10px; }
-        .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 8px; border-top: 1px solid #1e2328; padding-top: 10px; }
+        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; white-space: nowrap; }
+        .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 1rem; }
+.shard-label { font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.4rem; 
+               padding-top: 0.6rem; text-transform: uppercase; font-size: 0.7rem; }
+        
+        .build-list { list-style: none; padding: 0; margin: 0; }
+        .build-list li { padding: 0.3rem 0; border-bottom: 0.06rem solid #1e2328; font-size: 0.9rem; display: flex; align-items: center; }
     </style>
 </head>
 <body>
@@ -167,7 +202,6 @@
 
 <div class="container">
     <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
-    
     <button id="main-team-btn" class="reroll-btn team-btn-top" onclick="generateTeam()">TEAM</button>
 
     <h1>Ultimate Bravery</h1>
@@ -179,17 +213,16 @@
         <button class="role-btn" onclick="generate('ADC')">ADC</button>
         <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
         <button class="role-btn" onclick="generate('FILL')">FILL</button>
-        </div>
+    </div>
 
-    <div id="results-container">
-        </div>
+    <div id="results-container"></div>
 </div>
 
 <script>
     const VERSION = "16.7.1"; 
     const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
     let runeData = [];
-    let lastSelectedMode = null; // Stores role or 'TEAM'
+    let lastSelectedMode = null;
 
     const itemToId = {
         "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
@@ -268,9 +301,7 @@
         try {
             const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/runesReforged.json`);
             runeData = await resp.json();
-        } catch (e) {
-            console.error("Failed to load runes", e);
-        }
+        } catch (e) { console.error("Failed to load runes", e); }
     }
 
     function reroll() {
@@ -283,22 +314,17 @@
         lastSelectedMode = 'TEAM';
         const loader = document.getElementById('loading-screen');
         loader.style.display = 'flex';
-        
         document.getElementById('results-container').innerHTML = '';
         const roles = ['TOP', 'JG', 'MID', 'ADC', 'SUPP'];
-        
-        // Pick 5 unique champions
         let tempChamps = [...data.champions];
         let teamChamps = [];
         for(let i=0; i<5; i++) {
             let index = Math.floor(Math.random() * tempChamps.length);
             teamChamps.push(tempChamps.splice(index, 1)[0]);
         }
-
         for(let i=0; i < roles.length; i++) {
             await createResultCard(roles[i], teamChamps[i]);
         }
-        
         loader.style.display = 'none';
     }
 
@@ -306,33 +332,21 @@
         lastSelectedMode = role;
         const loader = document.getElementById('loading-screen');
         loader.style.display = 'flex';
-        
         document.getElementById('results-container').innerHTML = '';
-        
-        let actualRole = role;
-        if (role === 'FILL') {
-            actualRole = getRandom(['TOP', 'JG', 'MID', 'ADC', 'SUPP']);
-        }
-
+        let actualRole = role === 'FILL' ? getRandom(['TOP', 'JG', 'MID', 'ADC', 'SUPP']) : role;
         await createResultCard(actualRole, getRandom(data.champions));
         loader.style.display = 'none';
     }
 
     async function createResultCard(role, champ) {
         if (runeData.length === 0) await loadRunes();
-
         const champId = getChampId(champ);
         let skillIcons = [{key:'Q', img:''}, {key:'W', img:''}, {key:'E', img:''}]; 
-        
         try {
             const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
             const json = await resp.json();
             const spells = json.data[champId].spells;
-            skillIcons = [
-                { key: 'Q', img: spells[0].image.full },
-                { key: 'W', img: spells[1].image.full },
-                { key: 'E', img: spells[2].image.full }
-            ];
+            skillIcons = [{ key: 'Q', img: spells[0].image.full }, { key: 'W', img: spells[1].image.full }, { key: 'E', img: spells[2].image.full }];
         } catch (e) { console.error("Skills fetch failed", e); }
 
         let s1, s2;
@@ -354,43 +368,39 @@
 
         let build = [];
         let itemPool = [...data.items];
-
         if (role === 'JG') build.push(getRandom(data.jgStarters));
         else if (role === 'SUPP') build.push("World Atlas");
         else build.push(getRandom(data.starters));
-
         build.push(getRandom(data.boots));
         if (role === 'SUPP') build.push(getRandom(data.suppFinals));
-        
         let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
         for(let i = 0; i < extraItems; i++) {
             let item = getRandom(itemPool);
             build.push(item);
             itemPool = itemPool.filter(it => it !== item);
         }
-
         const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
 
         const card = document.createElement('div');
         card.className = 'result-card';
         card.innerHTML = `
             <div class="column">
-                <div class="result-item" style="font-size: 1.2rem; font-weight: bold; color: #fff; display: flex; align-items: baseline;">
-                    <span class="label" style="display: inline; margin-right: 8px;">ROLE:</span>
+                <div class="result-item" style="font-size: 1.1rem; font-weight: bold; color: #fff; display: flex; align-items: baseline;">
+                    <span class="label" style="display: inline; margin-right: 0.5rem;">ROLE:</span>
                     <span>${role}</span>
                 </div>
                 <div class="result-item">
                     <span class="label">Champion</span>
                     <div class="champ-container">
                         <img class="icon-large" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png">
-                        <span class="res-champ" style="font-size: 1.5rem; font-weight: bold; color: #fff;">${champ}</span>
+                        <span class="res-champ" style="font-size: 1.4rem; font-weight: bold; color: #fff;">${champ}</span>
                     </div>
                 </div>
                 <div class="result-item">
                     <span class="label">Summoner Spells</span>
-                    <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="display: flex; gap: 0.6rem; align-items: center;">
                         <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png">
-                        <span style="color: var(--gold); font-weight: bold; margin: 0 5px;">/</span>
+                        <span style="color: var(--gold); font-weight: bold; margin: 0 0.3rem;">/</span>
                         <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png">
                     </div>
                 </div>
@@ -402,30 +412,36 @@
                                 <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
                                 <span class="skill-letter">${s.key}</span>
                             </div>
-                            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold; margin-bottom: 30px;">&gt;</span>' : ''}
+                            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold; margin-bottom: 1.8rem;">&gt;</span>' : ''}
                         `).join('')}
                     </div>
                 </div>
             </div>
-
-            <div class="column middle-border">
-                <div class="result-item">
-                    <span class="label">Rune Page</span>
-                    <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-                        <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> ${primaryTree.name}
+            
+            <div class="column">
+                <span class="label">Primary Runes</span>
+                <div class="rune-group">
+                    <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+                        <img src="${runeBase}${primaryTree.icon}" style="width:1.25rem; filter:brightness(1.5);"> ${primaryTree.name}
                     </div>
-                    <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
+                    <div class="minor-runes" style="margin-left: 0.5rem; font-weight: bold; color: #fff;">
                         <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:15px; margin-left: 20px;">
+                    <div style="display:flex; flex-direction:column; gap:0.3rem; margin-left: 0.5rem;">
                         <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
                         <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
                         <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
                     </div>
-                    <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
-                        <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> ${secondaryTree.name}
+                </div>
+            </div>
+
+            <div class="column">
+                <span class="label">Secondary</span>
+                <div class="rune-group">
+                    <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+                        <img src="${runeBase}${secondaryTree.icon}" style="width:1.25rem; filter:brightness(1.5);"> ${secondaryTree.name}
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
+                    <div style="display:flex; flex-direction:column; gap:0.3rem; margin-left: 0.5rem;">
                         <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
                         <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
                     </div>
@@ -433,7 +449,7 @@
                         <span class="shard-label">Shards</span>
                         ${data.stats.map(row => {
                             const shard = getRandom(row);
-                            return `<div class="minor-runes"><img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> ${shard.n}</div>`;
+                            return `<div class="minor-runes"><img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:1.1rem; margin-right:0.6rem; border-radius:50%;"> ${shard.n}</div>`;
                         }).join('')}
                     </div>
                 </div>
@@ -445,7 +461,7 @@
                     <ul class="build-list">
                         ${build.map((item, idx) => `
                             <li>
-                                <span style="width: 25px; opacity: 0.5; font-size: 0.8rem;">${idx + 1}.</span>
+                                <span style="width: 1.5rem; opacity: 0.5; font-size: 0.8rem;">${idx + 1}.</span>
                                 <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${itemToId[item] || '1001'}.png"> 
                                 ${item}
                             </li>
@@ -456,7 +472,6 @@
         `;
         document.getElementById('results-container').appendChild(card);
     }
-
     loadRunes();
 </script>
 </body>
