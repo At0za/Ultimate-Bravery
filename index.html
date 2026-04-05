@@ -108,42 +108,20 @@
         }
 
 @media (max-width: 600px) {
-    /* 1. Create a container for the top buttons on mobile */
-    .container { 
-        display: flex;
-        flex-direction: column;
-        margin-top: 10px; 
-        margin-bottom: 10px; 
-    }
-
-    /* 2. Fix the Reroll and Team buttons layout */
     .reroll-btn { 
-        position: relative; /* Change from absolute to sit in the flow */
+        position: relative; 
         top: 0 !important; 
         left: 0 !important; 
-        right: 0 !important;
-        width: 48%; /* Let them sit side-by-side */
-        margin: 5px 1%;
-        font-size: 0.75rem;
-        padding: 10px 5px;
-        display: inline-block;
-        box-sizing: border-box;
+        width: 100%; 
+        margin: 0 auto 15px auto; /* Centers the button and adds bottom spacing */
+        display: block;           /* Ensures it takes up its own line */
+        box-sizing: border-box;   /* CRITICAL: Keeps the 100% width inside the gold box */
     }
-
-    /* 3. Wrap the buttons so they stay on one line */
-    h1 { 
-        order: 2; /* Moves title below buttons if you want, or keep at 0 */
-        font-size: 1.5rem;
-    }
-
-    .role-btn { 
-        flex: 1 1 30%; 
-        font-size: 0.75rem; 
-        padding: 8px; 
-    }
-
+    
+    .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 10px; }
     .icon-large { width: 48px; height: 48px; }
-    .res-champ { font-size: 1.1rem !important; }
+    .res-champ { font-size: 1.2rem !important; }
+    .container { margin-top: 10px; margin-bottom: 10px; padding: 15px; }
 }
         
         .result-item { margin-bottom: 20px; }
