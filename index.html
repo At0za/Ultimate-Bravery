@@ -18,9 +18,20 @@
             flex-direction: column; 
             align-items: center; 
             padding: 20px; 
+            margin: 0;
         }
         
-        .container { position: relative; width: 100%; max-width: 1200px; background: var(--card-bg); border: 2px solid var(--gold); padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 1200px; 
+            background: var(--card-bg); 
+            border: 2px solid var(--gold); 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
+            box-sizing: border-box;
+        }
         
         /* REROLL BUTTON STYLE */
         .reroll-btn {
@@ -35,24 +46,47 @@
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.75rem;
+            z-index: 10;
             transition: all 0.2s;
             opacity: 0.6;
         }
         .reroll-btn:hover { opacity: 1; background: rgba(200, 155, 60, 0.1); }
 
-        h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; grid-column: 1 / -1;}
+        h1 { text-align: center; color: var(--gold); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
         
-        .role-selector { display: flex; justify-content: center; margin-bottom: 25px; gap: 15px; grid-column: 1 / -1; }
+        .role-selector { display: flex; justify-content: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap; }
         
         .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         .role-btn:hover { background: var(--gold); color: var(--background); }
         
-        .result-section { display: none; grid-column: 1 / -1; border-top: 1px solid #3c3c41; padding-top: 25px; grid-template-columns: 1fr 1fr 1fr; gap: 30px; animation: fadeIn 0.4s ease; }
+        /* RESPONSIVE GRID SYSTEM */
+        .result-section { 
+            display: none; 
+            border-top: 1px solid #3c3c41; 
+            padding-top: 25px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            animation: fadeIn 0.4s ease; 
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .left-column { grid-column: 1; text-align: left; }
-        .middle-column { grid-column: 2; text-align: left; border-left: 1px solid #1e2328; border-right: 1px solid #1e2328; padding: 0 20px; }
-        .right-column { grid-column: 3; text-align: left; }
+        .column { text-align: left; }
+        
+        /* COLUMN BORDERS FOR DESKTOP ONLY */
+        @media (min-width: 992px) {
+            .result-section { grid-template-columns: 1fr 1fr 1fr; }
+            .middle-border { border-left: 1px solid #1e2328; border-right: 1px solid #1e2328; padding: 0 20px; }
+        }
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 600px) {
+            .reroll-btn { position: relative; top: 0; left: 0; width: 100%; margin-bottom: 15px; }
+            .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 10px; }
+            .icon-large { width: 48px; height: 48px; }
+            #res-champ { font-size: 1.2rem !important; }
+        }
         
         .result-item { margin-bottom: 20px; }
         .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; opacity: 0.8; }
@@ -63,20 +97,22 @@
         .icon-large { width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 4px; margin-right: 15px; float: left; }
         .champ-container { overflow: hidden; display: flex; align-items: center; }
 
-        .skill-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .skill-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
         .skill-box { text-align: center; }
         .skill-icon { width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 4px; display: block; margin-bottom: 4px; }
         .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
 
+        #loading-screen { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; 
+            align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; 
+            text-transform: uppercase; letter-spacing: 5px; flex-direction: column; 
+        }
+
         #loading-screen::after {
-            content: "";
-            width: 40px;
-            height: 40px;
-            margin-top: 20px;
-            border: 4px solid #1e2328;
-            border-top: 4px solid var(--gold);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            content: ""; width: 40px; height: 40px; margin-top: 20px;
+            border: 4px solid #1e2328; border-top: 4px solid var(--gold);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -91,9 +127,7 @@
 </head>
 <body>
 
-<div id="loading-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 5px; flex-direction: column;">
-    Loading...
-</div>
+<div id="loading-screen">Loading...</div>
 
 <div class="container">
     <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
@@ -107,8 +141,8 @@
         <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
     </div>
 
-    <div id="results" class="result-section">
-        <div class="left-column">
+    <div id="results" class="result-section" style="display: none;">
+        <div class="column">
             <div class="result-item">
                 <span class="label">Champion</span>
                 <div class="champ-container">
@@ -126,14 +160,14 @@
             </div>
         </div>
 
-        <div class="middle-column">
+        <div class="column middle-border">
             <div class="result-item">
                 <span class="label">Rune Page</span>
                 <div id="res-runes"></div>
             </div>
         </div>
 
-        <div class="right-column">
+        <div class="column">
             <div class="result-item">
                 <span class="label">Item Build</span>
                 <ul id="res-items" class="build-list"></ul>
@@ -146,7 +180,7 @@
     const VERSION = "16.7.1"; 
     const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
     let runeData = [];
-    let lastSelectedRole = null; // Track most recent role
+    let lastSelectedRole = null;
 
     const itemToId = {
         "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
@@ -194,7 +228,7 @@
 
     const data = {
         champions: ["Aatrox", "Ahri", "Akali", "Akshan", "Alistar", "Ambessa", "Amumu", "Anivia", "Annie", "Aphelios", "Ashe", "Aurelion Sol", "Aurora", "Azir", "Bard", "Bel'Veth", "Blitzcrank", "Brand", "Braum", "Briar", "Caitlyn", "Camille", "Cassiopeia", "Cho'Gath", "Corki", "Darius", "Diana", "Dr. Mundo", "Draven", "Ekko", "Elise", "Evelynn", "Ezreal", "Fiddlesticks", "Fiora", "Fizz", "Galio", "Gangplank", "Garen", "Gnar", "Gragas", "Graves", "Gwen", "Hecarim", "Heimerdinger", "Hwei", "Illaoi", "Irelia", "Ivern", "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin", "Jinx", "K'Sante", "Kai'Sa", "Kalista", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle", "Kayn", "Kennen", "Kha'Zix", "Kindred", "Kled", "Kog'Maw", "LeBlanc", "Lee Sin", "Leona", "Lillia", "Lissandra", "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "Master Yi", "Mel", "Milio", "Miss Fortune", "Mordekaiser", "Morgana", "Naafiri", "Nami", "Nasus", "Nautilus", "Neeko", "Nidalee", "Nilah", "Nocturne", "Nunu & Willump", "Olaf", "Orianna", "Ornn", "Pantheon", "Poppy", "Pyke", "Qiyana", "Quinn", "Rakan", "Rammus", "Rek'Sai", "Rell", "Renata Glasc", "Renekton", "Rengar", "Riven", "Rumble", "Ryze", "Samira", "Sejuani", "Senna", "Seraphine", "Sett", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Skarner", "Smolder", "Sona", "Soraka", "Swain", "Sylas", "Syndra", "Tahm Kench", "Taliyah", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere", "Twisted Fate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vel'Koz", "Vex", "Vi", "Viego", "Viktor", "Vladimir", "Volibear", "Warwick", "Wukong", "Xayah", "Xerath", "Xin Zhao", "Yasuo", "Yone", "Yorick", "Yunara", "Yuumi", "Zaahen", "Zac", "Zed", "Zeri", "Ziggs", "Zilean", "Zoe", "Zyra"],
-        items: ["Luden's Echo", "Actualizer", "Bandlepipes", "Bastionbreaker", "Diadem of Songs", "Dusk and Dawn", "Endless Hunger", "Fiendhunter Bolts", "Hexoptics C44", "Protoplasm Harness", "Hextech Gunblade", "Stormrazor", "Overlord's Bloodmail", "Yun Tal Wildarrows", "Ardent Censer", "Staff of Flowing Water", "Mikael's Blessing", "Redemption", "Knight's Vow", "Zeke's Convergence", "Locket of the Iron Solari", "Imperial Mandate", "Echoes of Helia", "Moonstone Renewer", "Dawncore", "Vigilant Wardstone", "Shurelya's Battlesong", "Trailblazer", "Rabadon's Deathcap", "Zhonya's Hourglass", "Banshee's Veil", "Liandry's Torment", "Blackfire Torch", "Archangel's Staff", "Malignance", "Shadowflame", "Stormsurge", "Cryptbloom", "Void Staff", "Nashor's Tooth", "Lich Bane", "Cosmic Drive", "Morellonomicon", "Rylai's Crystal Scepter", "Infinity Edge", "The Collector", "Lord Dominik's Regards", "Mortal Reminder", "Kraken Slayer", "Navori Flickerblade", "Phantom Dancer", "Statikk Shiv", "Rapid Firecannon", "Blade of the Ruined King", "Terminus", "Wit's End", "Guinsoo's Rageblade", "Immortal Shieldbow", "Bloodthirster", "Essence Reaver", "Youmuu's Ghostblade", "Hubris", "Opportunity", "Axiom Arc", "Edge of Night", "Serylda's Grudge", "Umbral Glaive", "Profane Hydra", "Voltaic Cyclosword", "Heartsteel", "Warmog's Armor", "Thornmail", "Sunfire Aegis", "Hollow Radiance", "Unending Despair", "Jak'Sho, The Protean", "Kaenic Rookern", "Spirit Visage", "Force of Nature", "Frozen Heart", "Randuin's Omen", "Dead Man's Plate", "Black Cleaver", "Trinity Force", "Stridebreaker", "Titanic Hydra", "Ravenous Hydra", "Spear of Shojin", "Sundered Sky", "Eclipse", "Sterak's Gage", "Hullbreaker", "Experimental Hexplate", "Death's Dance", "Maw of Malmortius", "Guardian Angel"],
+        items: ["Luden's Echo", "Actualizer", "Bandlepipes", "Bastionbreaker", "Diadem of Songs", "Dusk and Dawn", "Endless Hunger", "Fiendhunter Bolts", "Hexoptics C44", "Protoplasm Harness", "Hextech Gunblade", "Stormrazor", "Overlord's Bloodmail", "Yun Tal Wildarrows", "Ardent Censer", "Staff of Flowing Water", "Mikael's Blessing", "Redemption", "Knight's Vow", "Zeke's Convergence", "Locket of the Iron Solari", "Imperial Mandate", "Echoes of Helia", "Moonstone Renewer", "Dawncore", "Vigilant Wardstone", "Shurelya's Battlesong", "Trailblazer", "Rabadon's Deathcap", "Zhonya's Hourglass", "Banshee's Veil", "Liandry's Torment", "Blackfire Torch", "Archangel's Staff", "Malignance", "Shadowflame", "Stormsurge", "Cryptbloom", "Void Staff", "Nashor's Tooth", "Lich Bane", "Cosmic Drive", "Morellonomicon", "Rylai's Crystal Scepter", "Infinity Edge", "The Collector", "Lord Dominik's Regards", "Mortal Reminder", "Kraken Slayer", "Navori Flickerblade", "Phantom Dancer", "Statikk Shiv", "Rapid Firecannon", "Blade of the Ruined King", "Terminus", "Wit's End", "Guinsoo's Rageblade", "Immortal Shieldbow", "Bloodthirster", "Essence Reaver", "Youmuu's Ghostblade", "Hubris", "Opportunity", "Axiom Arc", "Edge of Night", "Serylda's Grudge", "Umbral Glaive", "攻擊 Hydra", "Voltaic Cyclosword", "Heartsteel", "Warmog's Armor", "Thornmail", "Sunfire Aegis", "Hollow Radiance", "Unending Despair", "Jak'Sho, The Protean", "Kaenic Rookern", "Spirit Visage", "Force of Nature", "Frozen Heart", "Randuin's Omen", "Dead Man's Plate", "Black Cleaver", "Trinity Force", "Stridebreaker", "Titanic Hydra", "Ravenous Hydra", "Spear of Shojin", "Sundered Sky", "Eclipse", "Sterak' Gage", "Hullbreaker", "Experimental Hexplate", "Death's Dance", "Maw of Malmortius", "Guardian Angel"],
         boots: ["Berserker's Greaves", "Ionian Boots of Lucidity", "Mercury's Treads", "Plated Steelcaps", "Sorcerer's Shoes", "Swiftness Boots"],
         starters: ["Doran's Blade", "Doran's Ring", "Doran's Shield", "Dark Seal", "Cull", "Tear of the Goddess"],
         jgStarters: ["Gustwalker Hatchling", "Mosstomper Seedling", "Scorchclaw Pup"],
@@ -230,17 +264,13 @@
         }
     }
 
-    // NEW REROLL FUNCTION
     function reroll() {
-        if (lastSelectedRole) {
-            generate(lastSelectedRole);
-        } else {
-            alert("Pick a role first!");
-        }
+        if (lastSelectedRole) generate(lastSelectedRole);
+        else alert("Pick a role first!");
     }
 
     async function generate(role) {
-        lastSelectedRole = role; // Store the role for rerolling
+        lastSelectedRole = role;
         const loader = document.getElementById('loading-screen');
         loader.style.display = 'flex';
 
@@ -250,6 +280,7 @@
             const champ = getRandom(data.champions);
             const champId = getChampId(champ);
             let skillIcons = [{key:'Q', img:''}, {key:'W', img:''}, {key:'E', img:''}]; 
+            
             try {
                 const resp = await fetch(`https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/en_US/champion/${champId}.json`);
                 const json = await resp.json();
@@ -270,12 +301,10 @@
 
             const primaryTree = getRandom(runeData);
             const secondaryTree = getRandom(runeData.filter(t => t.id !== primaryTree.id));
-
             const keystone = getRandom(primaryTree.slots[0].runes);
             const p1 = getRandom(primaryTree.slots[1].runes);
             const p2 = getRandom(primaryTree.slots[2].runes);
             const p3 = getRandom(primaryTree.slots[3].runes);
-
             const sRows = [1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, 2);
             const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
             const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
@@ -301,8 +330,7 @@
 
             document.getElementById('res-runes').innerHTML = `
                 <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-                    <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
-                    ${primaryTree.name}
+                    <img src="${runeBase}${primaryTree.icon}" style="width:20px; filter:brightness(1.5);"> ${primaryTree.name}
                 </div>
                 <div class="minor-runes" style="margin-left: 20px; font-weight: bold; color: #fff;">
                     <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
@@ -312,24 +340,20 @@
                     <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
                     <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
                 </div>
-
                 <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:20px;">
-                    <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> 
-                    ${secondaryTree.name}
+                    <img src="${runeBase}${secondaryTree.icon}" style="width:20px; filter:brightness(1.5);"> ${secondaryTree.name}
                 </div>
                 <div style="display:flex; flex-direction:column; gap:5px; margin-left: 20px;">
                     <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
                     <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
                 </div>
-
                 <div class="stat-nodes">
                     <span class="shard-label">Shards</span>
                     <div style="display:flex; flex-direction:column; gap:5px;">
                         ${data.stats.map(row => {
                             const shard = getRandom(row);
                             return `<div class="minor-runes">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> 
-                                ${shard.n}
+                                <img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:18px; margin-right:10px; border-radius:50%;"> ${shard.n}
                             </div>`;
                         }).join('')}
                     </div>
@@ -339,43 +363,35 @@
             let build = [];
             let pool = [...data.items];
 
+            // Item generation logic
             if (role === 'JG') build.push(getRandom(data.jgStarters));
             else if (role === 'SUPP') build.push("World Atlas");
             else build.push(getRandom(data.starters));
 
             build.push(getRandom(data.boots));
 
-            if (role === 'SUPP') {
-                build.push(getRandom(data.suppFinals));
-                for(let i = 0; i < 4; i++) {
-                    let item = getRandom(pool);
-                    build.push(item);
-                    pool = pool.filter(it => it !== item);
-                }
-            } else if (role === 'ADC') {
-                for(let i = 0; i < 6; i++) {
-                    let item = getRandom(pool);
-                    build.push(item);
-                    pool = pool.filter(it => it !== item);
-                }
-            } else {
-                for(let i = 0; i < 5; i++) {
-                    let item = getRandom(pool);
-                    build.push(item);
-                    pool = pool.filter(it => it !== item);
-                }
+            if (role === 'SUPP') build.push(getRandom(data.suppFinals));
+            
+            // Standardizing build length: ADC gets 6 items, Support 4 extra, others 5 extra
+            let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
+            for(let i = 0; i < extraItems; i++) {
+                if(pool.length === 0) break;
+                let item = getRandom(pool);
+                build.push(item);
+                pool = pool.filter(it => it !== item);
             }
 
             document.getElementById('res-items').innerHTML = build.map((item, index) => {
                 const id = itemToId[item] || "1001";
                 return `<li>
-                    <span style="width: 25px; display: inline-block; opacity: 0.5; font-size: 0.8rem;">${index}.</span>
+                    <span style="width: 25px; display: inline-block; opacity: 0.5; font-size: 0.8rem;">${index + 1}.</span>
                     <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${id}.png"> 
                     ${item}
                 </li>`;
             }).join('');
 
             loader.style.display = 'none';
+            window.scrollTo({ top: document.getElementById('results').offsetTop - 20, behavior: 'smooth' });
         }, 75); 
     }
 
