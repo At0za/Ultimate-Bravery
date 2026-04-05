@@ -67,7 +67,6 @@
         .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         .role-btn:hover { background: var(--gold); color: var(--background); }
         
-        /* THE FIX: Start hidden */
         #results { 
             display: none; 
             border-top: 1px solid #3c3c41; 
@@ -145,10 +144,16 @@
         <button class="role-btn" onclick="generate('MID')">MID</button>
         <button class="role-btn" onclick="generate('ADC')">ADC</button>
         <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
+        <button class="role-btn" onclick="generate('FILL')">FILL</button>
     </div>
 
     <div id="results">
         <div class="column">
+            <div class="result-item" style="font-size: 1.2rem; font-weight: bold; color: var(--white); display: flex; align-items: baseline;">
+                                 <span class="label" style="display: inline; margin-right: 8px;">ASSIGNED ROLE:</span>
+                                 <span id="res-role-display" style="position: relative; top: 2px;"></span>
+                             </div>
+
             <div class="result-item">
                 <span class="label">Champion</span>
                 <div class="champ-container">
@@ -276,7 +281,15 @@
     }
 
     async function generate(role) {
+        // lastSelectedRole keeps the ACTUAL button pressed (e.g., 'FILL')
         lastSelectedRole = role;
+
+        let actualRole = role;
+        if (role === 'FILL') {
+            const roles = ['TOP', 'JG', 'MID', 'ADC', 'SUPP'];
+            actualRole = getRandom(roles);
+        }
+
         const loader = document.getElementById('loading-screen');
         loader.style.display = 'flex';
 
@@ -299,7 +312,7 @@
             } catch (e) { console.error("Skills fetch failed", e); }
 
             let s1, s2;
-            if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
+            if (actualRole === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
             else {
                 const pool = data.summs.filter(s => s !== "SummonerSmite");
                 s1 = getRandom(pool); s2 = getRandom(pool.filter(s => s !== s1));
@@ -315,8 +328,11 @@
             const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
             const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
 
-            // Set to grid only when generating
             document.getElementById('results').style.display = 'grid'; 
+
+            // DISPLAY THE CHOSEN ROLE (updates even if button pressed was FILL)
+            document.getElementById('res-role-display').innerText = actualRole;
+
             document.getElementById('res-champ').innerText = champ;
             document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
 
@@ -370,15 +386,15 @@
             let build = [];
             let pool = [...data.items];
 
-            if (role === 'JG') build.push(getRandom(data.jgStarters));
-            else if (role === 'SUPP') build.push("World Atlas");
+            if (actualRole === 'JG') build.push(getRandom(data.jgStarters));
+            else if (actualRole === 'SUPP') build.push("World Atlas");
             else build.push(getRandom(data.starters));
 
             build.push(getRandom(data.boots));
 
-            if (role === 'SUPP') build.push(getRandom(data.suppFinals));
+            if (actualRole === 'SUPP') build.push(getRandom(data.suppFinals));
             
-            let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
+            let extraItems = (actualRole === 'SUPP') ? 4 : (actualRole === 'ADC' ? 6 : 5);
             for(let i = 0; i < extraItems; i++) {
                 if(pool.length === 0) break;
                 let item = getRandom(pool);
