@@ -10,15 +10,23 @@
             --resolve: #a1d586; --inspiration: #48b4be; --background: #010a13;
             --card-bg: #091428; --text: #f0e6d2; --gold: #c89b3c;
         }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: var(--background);
+            scroll-behavior: smooth;
+        }
+
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--background); 
             color: var(--text); 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             padding: 20px; 
-            margin: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
         }
         
         .container { 
@@ -27,13 +35,13 @@
             max-width: 1200px; 
             background: var(--card-bg); 
             border: 2px solid var(--gold); 
-            padding: 20px; 
+            padding: 30px 20px; 
             border-radius: 10px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
             box-sizing: border-box;
+            margin: auto; 
         }
         
-        /* REROLL BUTTON STYLE */
         .reroll-btn {
             position: absolute;
             top: 20px;
@@ -59,12 +67,11 @@
         .role-btn { padding: 12px 25px; background: #1e2328; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
         .role-btn:hover { background: var(--gold); color: var(--background); }
         
-        /* RESPONSIVE GRID SYSTEM */
-        .result-section { 
+        /* THE FIX: Start hidden */
+        #results { 
             display: none; 
             border-top: 1px solid #3c3c41; 
             padding-top: 25px; 
-            display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
             gap: 30px; 
             animation: fadeIn 0.4s ease; 
@@ -74,18 +81,17 @@
         
         .column { text-align: left; }
         
-        /* COLUMN BORDERS FOR DESKTOP ONLY */
         @media (min-width: 992px) {
-            .result-section { grid-template-columns: 1fr 1fr 1fr; }
+            #results { grid-template-columns: 1fr 1fr 1fr; }
             .middle-border { border-left: 1px solid #1e2328; border-right: 1px solid #1e2328; padding: 0 20px; }
         }
 
-        /* MOBILE ADJUSTMENTS */
         @media (max-width: 600px) {
             .reroll-btn { position: relative; top: 0; left: 0; width: 100%; margin-bottom: 15px; }
             .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 10px; }
             .icon-large { width: 48px; height: 48px; }
             #res-champ { font-size: 1.2rem !important; }
+            .container { margin-top: 10px; margin-bottom: 10px; }
         }
         
         .result-item { margin-bottom: 20px; }
@@ -118,11 +124,11 @@
 
         .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
         .build-list { list-style: none; padding: 0; margin: 0; }
-        .build-list li { padding: 7px 0; border-bottom: 1px solid #1e2328; font-size: 0.95rem; display: flex; align-items: center; }
+        .build-list li { padding: 5px 0; border-bottom: 1px solid #1e2328; font-size: 0.9rem; display: flex; align-items: center; }
         
-        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 8px; display: flex; align-items: center; }
-        .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 12px; }
-        .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 10px; border-top: 1px solid #1e2328; padding-top: 10px; }
+        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 6px; display: flex; align-items: center; }
+        .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 10px; }
+        .shard-label { font-weight: bold; color: #a0a0a0; display: block; margin-bottom: 8px; border-top: 1px solid #1e2328; padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -141,7 +147,7 @@
         <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
     </div>
 
-    <div id="results" class="result-section" style="display: none;">
+    <div id="results">
         <div class="column">
             <div class="result-item">
                 <span class="label">Champion</span>
@@ -309,6 +315,7 @@
             const s1Rune = getRandom(secondaryTree.slots[sRows[0]].runes);
             const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
 
+            // Set to grid only when generating
             document.getElementById('results').style.display = 'grid'; 
             document.getElementById('res-champ').innerText = champ;
             document.getElementById('img-champ').src = `https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png`;
@@ -363,7 +370,6 @@
             let build = [];
             let pool = [...data.items];
 
-            // Item generation logic
             if (role === 'JG') build.push(getRandom(data.jgStarters));
             else if (role === 'SUPP') build.push("World Atlas");
             else build.push(getRandom(data.starters));
@@ -372,7 +378,6 @@
 
             if (role === 'SUPP') build.push(getRandom(data.suppFinals));
             
-            // Standardizing build length: ADC gets 6 items, Support 4 extra, others 5 extra
             let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
             for(let i = 0; i < extraItems; i++) {
                 if(pool.length === 0) break;
@@ -391,7 +396,6 @@
             }).join('');
 
             loader.style.display = 'none';
-            window.scrollTo({ top: document.getElementById('results').offsetTop - 20, behavior: 'smooth' });
         }, 75); 
     }
 
