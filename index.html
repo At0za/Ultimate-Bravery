@@ -43,42 +43,9 @@
             margin: auto; 
         }
         
-        /* Top Navigation Area */
-/* Fixes the overlap by letting the title take the full width 
-   and placing buttons on top of that row */
-.header-controls {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Changed from center to flex-start */
-    padding: 0.625rem;
-    margin-bottom: -1rem; /* Increased margin to give title breathing room */
-    min-height: 4rem; 
-}
-
-h1 { 
-    position: absolute;
-    top: 0.5rem; /* Explicitly set distance from top */
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    text-align: center; 
-    color: var(--gold); 
-    margin: 0 0 0.5rem 0; 
-    text-transform: uppercase; 
-    letter-spacing: 0.125rem; 
-    font-size: 2rem;
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* Ensure buttons stay above the title's layer */
-.left-controls, .team-btn-top {
-    position: relative;
-    z-index: 2;
-}
-
         .reroll-btn {
+            position: absolute;
+            top: 1.25rem;
             padding: 0.75rem 1.5rem;
             background: #1e2328;
             border: 0.06rem solid var(--gold);
@@ -87,37 +54,21 @@ h1 {
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.9rem;
+            z-index: 10;
             transition: all 0.2s ease;
         }
 
         .reroll-btn:hover { background: var(--gold); color: var(--background); }
+        .reroll-btn:not(.team-btn-top) { left: 1.25rem; }
 
-        /* Specific fix for the dropdown hover issue */
-        #champ-select {
-            padding: 0.75rem 2.5rem 0.75rem 1rem;
-            background-color: #1e2328;
-            color: var(--gold);
-            border: 0.06rem solid var(--gold);
-            font-weight: bold;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c89b3c%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.7rem top 50%;
-            background-size: 0.65rem auto;
+        h1 { 
+            text-align: center; 
+            color: var(--gold); 
+            margin-top: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.125rem; 
+            font-size: 2rem;
         }
-
-        #champ-select:hover {
-            color: var(--gold) !important; /* Forces text to stay gold */
-            border-color: var(--text);
-        }
-
-        .team-btn-top {
-            border-color: #00cfbc;
-            color: #00cfbc;
-        }
-
-        .team-btn-top:hover { background: #00cfbc; color: #010a13; }
         
         .role-selector { 
             display: flex; 
@@ -125,6 +76,7 @@ h1 {
             margin-bottom: 1.5rem; 
             gap: 0.9rem; 
             flex-wrap: wrap; 
+            align-items: center;
         }
         
         .role-btn { 
@@ -141,6 +93,42 @@ h1 {
 
         .role-btn:hover { background: var(--gold); color: var(--background); }
 
+        /* Champion Select Styling */
+.champ-dropdown-fixed {
+    position: absolute;
+    top: 4.5rem; /* Adjusts the distance below the TEAM button */
+    right: 1.25rem;
+    width: 9.1rem; /* Matches the approximate width of the TEAM button */
+    padding: 0.5rem;
+    background: #1e2328;
+    border: 0.06rem solid var(--gold);
+    color: var(--gold);
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 0.7rem;
+}
+
+/* Ensure it stacks correctly on mobile */
+@media (max-width: 600px) {
+    .champ-dropdown-fixed {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+        .team-btn-top {
+            right: 1.25rem;
+            border-color: #00cfbc;
+            color: #00cfbc;
+        }
+
+        .team-btn-top:hover { background: #00cfbc; color: #010a13; }
+        
         #results-container { width: 100%; }
 
         .result-card { 
@@ -171,12 +159,26 @@ h1 {
             }
         }
 
+        @media (max-width: 991px) and (min-width: 601px) {
+            .result-card { grid-template-columns: 1fr 1fr; }
+        }
+
         @media (max-width: 600px) {
             :root { font-size: 14px; }
-            .header-controls { flex-direction: column; gap: 10px; }
-            .left-controls { width: 100%; flex-direction: column; }
-            .reroll-btn, #champ-select, #main-team-btn { width: 100%; }
-            .role-btn { flex: 1 1 40%; font-size: 0.8rem; padding: 0.6rem; }
+            .reroll-btn { 
+                position: relative; 
+                top: 0 !important; 
+                left: 0 !important; 
+                right: 0 !important;
+                width: 100%; 
+                margin: 0 auto 0.9rem auto; 
+                display: block;            
+                box-sizing: border-box;    
+            }
+            .role-btn, #champ-select { flex: 1 1 40%; font-size: 0.8rem; padding: 0.6rem; }
+            .icon-large { width: 3rem; height: 3rem; }
+            .res-champ { font-size: 1.2rem !important; }
+            .container { margin-top: 0.6rem; margin-bottom: 0.6rem; padding: 0.9rem; }
         }
         
         .result-item { margin-bottom: 1.25rem; }
@@ -184,16 +186,20 @@ h1 {
         
         .icon-inline { width: 1.5rem; height: 1.5rem; vertical-align: middle; margin-right: 0.5rem; border-radius: 0.25rem; border: 0.06rem solid rgba(200, 155, 60, 0.3); }
         .icon-rune { width: 1.35rem; height: 1.35rem; vertical-align: middle; margin-right: 0.6rem; border-radius: 50%; }
-        .icon-large { width: 4rem; height: 4rem; border: 0.125rem solid var(--gold); border-radius: 0.25rem; margin-right: 0.9rem; float: left; }
         
+        .icon-large { width: 4rem; height: 4rem; border: 0.125rem solid var(--gold); border-radius: 0.25rem; margin-right: 0.9rem; float: left; }
+        .champ-container { overflow: hidden; display: flex; align-items: center; }
+
         .skill-container { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem; flex-wrap: wrap; }
+        .skill-box { text-align: center; }
         .skill-icon { width: 2.6rem; height: 2.6rem; border: 0.06rem solid var(--gold); border-radius: 0.25rem; display: block; margin-bottom: 0.25rem; }
-        .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-align: center; display: block; }
+        .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
 
         #loading-screen { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; 
-            align-items: center; color: var(--gold); font-size: 2rem; flex-direction: column; 
+            align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; 
+            text-transform: uppercase; letter-spacing: 0.3rem; flex-direction: column; 
         }
 
         #loading-screen::after {
@@ -203,11 +209,15 @@ h1 {
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; }
+        .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
+        
+        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; white-space: nowrap; }
         .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 1rem; }
+        .shard-label { font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.4rem; 
+                        padding-top: 0.6rem; text-transform: uppercase; font-size: 0.7rem; }
+        
         .build-list { list-style: none; padding: 0; margin: 0; }
         .build-list li { padding: 0.3rem 0; border-bottom: 0.06rem solid #1e2328; font-size: 0.9rem; display: flex; align-items: center; }
-        .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
     </style>
 </head>
 <body>
@@ -215,15 +225,11 @@ h1 {
 <div id="loading-screen">Loading...</div>
 
 <div class="container">
-    <div class="header-controls">
-        <div class="left-controls">
-            <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
-            <select id="champ-select">
-                <option value="RANDOM">RANDOM CHAMPION</option>
-            </select>
-        </div>
-        <button id="main-team-btn" class="reroll-btn team-btn-top" onclick="generateTeam()">TEAM</button>
-    </div>
+    <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
+<button id="main-team-btn" class="reroll-btn team-btn-top" onclick="generateTeam()">TEAM</button>
+<select id="champ-select" class="champ-dropdown-fixed">
+    <option value="RANDOM">RANDOM CHAMPION</option>
+</select>
 
     <h1>Ultimate Bravery</h1>
     
@@ -234,14 +240,13 @@ h1 {
         <button class="role-btn" onclick="generate('ADC')">ADC</button>
         <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
         <button class="role-btn" onclick="generate('FILL')">FILL</button>
+        
     </div>
 
     <div id="results-container"></div>
 </div>
 
 <script>
-    // ... rest of the script remains identical to the previous version ...
-    // Make sure populateChampSelect() and the select logic stays the same!
     const VERSION = "16.7.1"; 
     const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
     let runeData = [];
@@ -306,6 +311,18 @@ h1 {
         ]
     };
 
+    function populateChampSelect() {
+        const select = document.getElementById('champ-select');
+        data.champions.forEach(name => {
+            let opt = document.createElement('option');
+            opt.value = name;
+            opt.innerHTML = name;
+            select.appendChild(opt);
+        });
+    }
+
+    function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
     const idMap = {
         "Aurelion Sol": "AurelionSol", "Bel'Veth": "Belveth", "Cho'Gath": "Chogath",
         "Dr. Mundo": "DrMundo", "Jarvan IV": "JarvanIV", "K'Sante": "KSante",
@@ -317,17 +334,6 @@ h1 {
     };
 
     function getChampId(name) { return idMap[name] || name.replace(/[^a-zA-Z0-9]/g, ""); }
-    function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-    function populateChampSelect() {
-        const select = document.getElementById('champ-select');
-        data.champions.sort().forEach(champ => {
-            const opt = document.createElement('option');
-            opt.value = champ;
-            opt.textContent = champ;
-            select.appendChild(opt);
-        });
-    }
 
     async function loadRunes() {
         try {
@@ -368,8 +374,9 @@ h1 {
         
         let actualRole = role === 'FILL' ? getRandom(['TOP', 'JG', 'MID', 'ADC', 'SUPP']) : role;
         
-        const selectedChamp = document.getElementById('champ-select').value;
-        const finalChamp = (selectedChamp === "RANDOM") ? getRandom(data.champions) : selectedChamp;
+        // Use dropdown value if not "RANDOM"
+        const lockedChamp = document.getElementById('champ-select').value;
+        const finalChamp = lockedChamp === "RANDOM" ? getRandom(data.champions) : lockedChamp;
 
         await createResultCard(actualRole, finalChamp);
         loader.style.display = 'none';
@@ -408,17 +415,14 @@ h1 {
         if (role === 'JG') build.push(getRandom(data.jgStarters));
         else if (role === 'SUPP') build.push("World Atlas");
         else build.push(getRandom(data.starters));
-
         build.push(getRandom(data.boots));
         if (role === 'SUPP') build.push(getRandom(data.suppFinals));
-
-        let extraCount = (role === 'SUPP') ? 3 : (role === 'ADC' ? 5 : 4);
-        for(let i = 0; i < extraCount; i++) {
+        let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
+        for(let i = 0; i < extraItems; i++) {
             let item = getRandom(itemPool);
             build.push(item);
             itemPool = itemPool.filter(it => it !== item);
         }
-
         const shuffledSkills = skillIcons.sort(() => Math.random() - 0.5);
 
         const card = document.createElement('div');
@@ -513,6 +517,7 @@ h1 {
         document.getElementById('results-container').appendChild(card);
     }
     
+    // Initialize
     populateChampSelect();
     loadRunes();
 </script>
