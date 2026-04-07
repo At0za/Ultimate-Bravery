@@ -12,9 +12,14 @@
             font-size: calc(14px + 0.3vw); 
         }
         
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         html, body {
             height: 100%;
-            margin: 0;
             background-color: var(--background);
             scroll-behavior: smooth;
         }
@@ -26,26 +31,50 @@
             flex-direction: column; 
             align-items: center; 
             padding: 1.25rem; 
-            box-sizing: border-box;
             overflow-y: auto;
         }
         
         .container { 
-            position: relative; 
             width: 100%; 
             max-width: 85rem; 
             background: var(--card-bg); 
             border: 0.125rem solid var(--gold); 
-            padding: 0.625rem; 
+            padding: 1.5rem; 
             border-radius: 0.625rem; 
             box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.7); 
-            box-sizing: border-box;
             margin: auto; 
         }
-        
-        .reroll-btn {
-            position: absolute;
-            top: 1.25rem;
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0rem;
+            gap: 1rem;
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .right-controls {
+            align-items: flex-end;
+        }
+
+        h1 { 
+            flex: 2;
+            text-align: center; 
+            color: var(--gold); 
+            text-transform: uppercase; 
+            letter-spacing: 0.125rem; 
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .btn {
             padding: 0.75rem 1.5rem;
             background: #1e2328;
             border: 0.06rem solid var(--gold);
@@ -53,195 +82,166 @@
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.9rem;
-            z-index: 10;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
+            text-align: center;
         }
 
-        .reroll-btn:hover { background: var(--gold); color: var(--background); }
-        .reroll-btn:not(.team-btn-top) { left: 1.25rem; }
+        .btn:hover { background: var(--gold); color: var(--background); }
 
-        h1 { 
-            text-align: center; 
-            color: var(--gold); 
-            margin-top: 0; 
-            text-transform: uppercase; 
-            letter-spacing: 0.125rem; 
-            font-size: 2rem;
+        .mode-toggle-group {
+            display: flex;
+            gap: 2px;
         }
-        
-        .role-selector { 
+
+        .mode-btn {
+            padding: 0.4rem 0.8rem;
+            background: #091428;
+            border: 0.06rem solid #5b5a56;
+            color: #5b5a56;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .mode-btn.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: #1e2328;
+        }
+
+        .team-btn { border-color: #00cfbc; color: #00cfbc; }
+        .team-btn:hover { background: #00cfbc; color: #010a13; }
+
+        .champ-dropdown {
+            width: 100%;
+            max-width: 200px;
+            padding: 0.5rem;
+            background: #1e2328;
+            border: 0.06rem solid var(--gold);
+            color: var(--gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .role-selector, .action-container { 
             display: flex; 
             justify-content: center; 
-            margin-bottom: 1.5rem; 
-            gap: 0.9rem; 
+            margin-bottom: 2rem; 
+            gap: 0.75rem; 
             flex-wrap: wrap; 
-            align-items: center;
-        }
-        
-        .role-btn { 
-            padding: 0.75rem 1.5rem; 
-            background: #1e2328; 
-            border: 0.06rem solid var(--gold); 
-            color: var(--gold); 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            font-weight: bold; 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
         }
 
-        .role-btn:hover { background: var(--gold); color: var(--background); }
-
-        /* Champion Select Styling */
-.champ-dropdown-fixed {
-    position: absolute;
-    top: 4.5rem; /* Adjusts the distance below the TEAM button */
-    right: 1.25rem;
-    width: 9.1rem; /* Matches the approximate width of the TEAM button */
-    padding: 0.5rem;
-    background: #1e2328;
-    border: 0.06rem solid var(--gold);
-    color: var(--gold);
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    z-index: 10;
-    font-size: 0.7rem;
-}
-
-/* Ensure it stacks correctly on mobile */
-@media (max-width: 600px) {
-    .champ-dropdown-fixed {
-        position: relative;
-        top: 0;
-        right: 0;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-}
-
-        .team-btn-top {
-            right: 1.25rem;
-            border-color: #00cfbc;
-            color: #00cfbc;
-        }
-
-        .team-btn-top:hover { background: #00cfbc; color: #010a13; }
-        
         #results-container { width: 100%; }
-
         .result-card { 
             display: grid; 
             border-top: 0.06rem solid #3c3c41; 
-            padding-top: 1.5rem; 
+            padding-top: 2rem; 
             margin-bottom: 2.5rem;
             grid-template-columns: 1fr; 
-            gap: 1.2rem; 
+            gap: 1.5rem; 
             animation: fadeIn 0.4s ease; 
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(0.6rem); } to { opacity: 1; transform: translateY(0); } }
-        
-        .column { text-align: left; min-width: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         @media (min-width: 992px) {
-            .result-card { grid-template-columns: 1.1fr 0.6fr 0.8fr 1.1fr; }
-            .column { padding: 0 0.5rem; }
-            .column:nth-child(2), 
-            .column:nth-child(4) { 
-                border-left: 0.06rem solid #3c3c41; 
-                padding-left: 1.5rem;
-            }
-            .column:nth-child(3) {
-                border-left: none;
-                padding-left: 1.5rem; 
-            }
+            .result-card { grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr; }
+            .column { padding: 0 1rem; }
+            .column:not(:first-child) { border-left: 0.06rem solid #3c3c41; }
         }
 
-        @media (max-width: 991px) and (min-width: 601px) {
-            .result-card { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 768px) {
+            .header-controls { flex-direction: column; align-items: center; }
+            .right-controls { align-items: center; width: 100%; }
+            .left-controls { align-items: center; width: 100%; }
+            h1 { order: -1; margin-bottom: 1rem; }
         }
 
-        @media (max-width: 600px) {
-            :root { font-size: 14px; }
-            .reroll-btn { 
-                position: relative; 
-                top: 0 !important; 
-                left: 0 !important; 
-                right: 0 !important;
-                width: 100%; 
-                margin: 0 auto 0.9rem auto; 
-                display: block;            
-                box-sizing: border-box;    
-            }
-            .role-btn, #champ-select { flex: 1 1 40%; font-size: 0.8rem; padding: 0.6rem; }
-            .icon-large { width: 3rem; height: 3rem; }
-            .res-champ { font-size: 1.2rem !important; }
-            .container { margin-top: 0.6rem; margin-bottom: 0.6rem; padding: 0.9rem; }
-        }
-        
-        .result-item { margin-bottom: 1.25rem; }
-        .label { font-size: 0.75rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.3rem; text-transform: uppercase; opacity: 0.8; }
-        
-        .icon-inline { width: 1.5rem; height: 1.5rem; vertical-align: middle; margin-right: 0.5rem; border-radius: 0.25rem; border: 0.06rem solid rgba(200, 155, 60, 0.3); }
-        .icon-rune { width: 1.35rem; height: 1.35rem; vertical-align: middle; margin-right: 0.6rem; border-radius: 50%; }
-        
-        .icon-large { width: 4rem; height: 4rem; border: 0.125rem solid var(--gold); border-radius: 0.25rem; margin-right: 0.9rem; float: left; }
-        .champ-container { overflow: hidden; display: flex; align-items: center; }
-
-        .skill-container { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem; flex-wrap: wrap; }
+        .label { font-size: 0.7rem; font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.4rem; text-transform: uppercase; opacity: 0.7; }
+        .icon-inline { width: 1.5rem; height: 1.5rem; vertical-align: middle; margin-right: 0.5rem; border-radius: 4px; }
+        .icon-large { width: 4.5rem; height: 4.5rem; border: 2px solid var(--gold); border-radius: 4px; margin-right: 1rem; }
+        .champ-container { display: flex; align-items: center; }
+        .skill-container { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
         .skill-box { text-align: center; }
-        .skill-icon { width: 2.6rem; height: 2.6rem; border: 0.06rem solid var(--gold); border-radius: 0.25rem; display: block; margin-bottom: 0.25rem; }
-        .skill-letter { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
+        .skill-icon { width: 2.5rem; height: 2.5rem; border: 1px solid var(--gold); border-radius: 4px; }
+        .skill-letter { font-size: 0.7rem; color: var(--gold); display: block; margin-top: 2px; }
+/* Fix the height to exactly 7 items (approx 21rem or 336px) */
+.build-list { 
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+    height: 300px; /* Adjust this to match your font-size/padding */
+    position: relative;
+}
 
-        #loading-screen { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(1, 10, 19, 0.9); z-index: 1000; justify-content: center; 
-            align-items: center; color: var(--gold); font-size: 2rem; font-weight: bold; 
-            text-transform: uppercase; letter-spacing: 0.3rem; flex-direction: column; 
-        }
+.build-list li { 
+    padding: 0.4rem 0; 
+    border-bottom: 1px solid #1e2328; 
+    display: flex; 
+    align-items: center; 
+    font-size: 0.9rem;
+    height: 42px; /* Fixed height for each row */
+    box-sizing: border-box;
+}
 
-        #loading-screen::after {
-            content: ""; width: 2.5rem; height: 2.5rem; margin-top: 1.25rem;
-            border: 0.25rem solid #1e2328; border-top: 0.25rem solid var(--gold);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+/* The 8th item will now float "outside" the layout logic */
+.build-list li:nth-child(8) {
+    position: absolute;
+    top: 294px; /* Starts right after the 7th item */
+    width: 100%;
+    border-bottom: none; /* Looks cleaner if it hangs off */
+}
+        .minor-runes { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.85rem; }
+        .icon-rune { width: 1.4rem; height: 1.4rem; border-radius: 50%; }
 
+        #loading-screen { display: none; position: fixed; inset: 0; background: rgba(1, 10, 19, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; color: var(--gold); letter-spacing: 4px; font-weight: bold; }
+        #loading-screen::after { content: ""; width: 40px; height: 40px; border: 4px solid #1e2328; border-top-color: var(--gold); border-radius: 50%; margin-top: 20px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
         .Precision { color: var(--precision); } .Domination { color: var(--domination); } .Sorcery { color: var(--sorcery); } .Resolve { color: var(--resolve); } .Inspiration { color: var(--inspiration); }
-        
-        .minor-runes { font-size: 0.85rem; color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; white-space: nowrap; }
-        .stat-nodes { font-size: 0.85rem; color: #a0a0a0; margin-top: 1rem; }
-        .shard-label { font-weight: bold; color: var(--gold); display: block; margin-bottom: 0.4rem; 
-                        padding-top: 0.6rem; text-transform: uppercase; font-size: 0.7rem; }
-        
-        .build-list { list-style: none; padding: 0; margin: 0; }
-        .build-list li { padding: 0.3rem 0; border-bottom: 0.06rem solid #1e2328; font-size: 0.9rem; display: flex; align-items: center; }
+.mt-2 {
+    margin-top: 2rem;
+}
     </style>
 </head>
 <body>
 
-<div id="loading-screen">Loading...</div>
+<div id="loading-screen">GENERATING</div>
 
 <div class="container">
-    <button class="reroll-btn" onclick="reroll()">↻ Reroll</button>
-<button id="main-team-btn" class="reroll-btn team-btn-top" onclick="generateTeam()">TEAM</button>
-<select id="champ-select" class="champ-dropdown-fixed">
-    <option value="RANDOM">RANDOM CHAMPION</option>
-</select>
+    <div class="header-controls">
+        <div class="left-controls">
+<!--            <button class="btn" onclick="reroll()">↻ Reroll</button>-->
+            <div class="mode-toggle-group">
+                <button id="mode-sr" class="mode-btn active" onclick="setMode('SR')">SR</button>
+                <button id="mode-aram" class="mode-btn" onclick="setMode('ARAM')">ARAM</button>
+            </div>
+        </div>
 
-    <h1>Ultimate Bravery</h1>
-    
-    <div class="role-selector">
-        <button class="role-btn" onclick="generate('TOP')">TOP</button>
-        <button class="role-btn" onclick="generate('JG')">JG</button>
-        <button class="role-btn" onclick="generate('MID')">MID</button>
-        <button class="role-btn" onclick="generate('ADC')">ADC</button>
-        <button class="role-btn" onclick="generate('SUPP')">SUPP</button>
-        <button class="role-btn" onclick="generate('FILL')">FILL</button>
-        
+        <h1>Ultimate Bravery</h1>
+
+        <div class="right-controls">
+            <button id="main-team-btn" class="btn team-btn" onclick="generateTeam()">TEAM</button>
+            <select id="champ-select" class="champ-dropdown">
+                <option value="RANDOM">RANDOM CHAMPION</option>
+            </select>
+        </div>
     </div>
+    
+    <div class="role-selector" id="role-selector">
+        <button class="btn" onclick="generate('TOP')">TOP</button>
+        <button class="btn" onclick="generate('JG')">JG</button>
+        <button class="btn" onclick="generate('MID')">MID</button>
+        <button class="btn" onclick="generate('ADC')">ADC</button>
+        <button class="btn" onclick="generate('SUPP')">SUPP</button>
+        <button class="btn" onclick="generate('FILL')">FILL</button>
+    </div>
+
+<div class="action-container" id="aram-action-container" style="display: none;">
+    <button class="btn mt-2" onclick="generateTeam()">ROLL ARAM BUILD</button>
+</div>
 
     <div id="results-container"></div>
 </div>
@@ -251,6 +251,7 @@
     const runeBase = "https://ddragon.leagueoflegends.com/cdn/img/";
     let runeData = [];
     let lastSelectedMode = null;
+    let currentAppMode = 'SR'; 
 
     const itemToId = {
         "Luden's Echo": "6655", "Actualizer": "2522", "Bandlepipes": "2524", "Bastionbreaker": "2520", 
@@ -293,7 +294,8 @@
         "Redemption": "3107", "Knight's Vow": "3109", 
         "Shurelya's Battlesong": "2065", "Trailblazer": "3002", "Imperial Mandate": "4005",
         "Echoes of Helia": "6620", "Moonstone Renewer": "6617", "Dawncore": "6621",
-        "Zeke's Convergence": "3050", "Locket of the Iron Solari": "3190"
+        "Zeke's Convergence": "3050", "Locket of the Iron Solari": "3190",
+        "Guardian's Blade": "3177", "Guardian's Hammer": "3184", "Guardian's Horn": "2051", "Guardian's Orb": "3112"
     };
 
     const data = {
@@ -301,15 +303,39 @@
         items: ["Luden's Echo", "Actualizer", "Bandlepipes", "Bastionbreaker", "Diadem of Songs", "Dusk and Dawn", "Endless Hunger", "Fiendhunter Bolts", "Hexoptics C44", "Protoplasm Harness", "Hextech Gunblade", "Stormrazor", "Overlord's Bloodmail", "Yun Tal Wildarrows", "Ardent Censer", "Staff of Flowing Water", "Mikael's Blessing", "Redemption", "Knight's Vow", "Zeke's Convergence", "Locket of the Iron Solari", "Imperial Mandate", "Echoes of Helia", "Moonstone Renewer", "Dawncore", "Shurelya's Battlesong", "Trailblazer", "Rabadon's Deathcap", "Zhonya's Hourglass", "Banshee's Veil", "Liandry's Torment", "Blackfire Torch", "Archangel's Staff", "Malignance", "Shadowflame", "Stormsurge", "Cryptbloom", "Void Staff", "Nashor's Tooth", "Lich Bane", "Cosmic Drive", "Morellonomicon", "Rylai's Crystal Scepter", "Infinity Edge", "The Collector", "Lord Dominik's Regards", "Mortal Reminder", "Kraken Slayer", "Navori Flickerblade", "Phantom Dancer", "Statikk Shiv", "Rapid Firecannon", "Blade of the Ruined King", "Terminus", "Wit's End", "Guinsoo's Rageblade", "Immortal Shieldbow", "Bloodthirster", "Essence Reaver", "Youmuu's Ghostblade", "Hubris", "Opportunity", "Axiom Arc", "Edge of Night", "Serylda's Grudge", "Umbral Glaive", "Profane Hydra", "Voltaic Cyclosword", "Heartsteel", "Warmog's Armor", "Thornmail", "Sunfire Aegis", "Hollow Radiance", "Unending Despair", "Jak'Sho, The Protean", "Kaenic Rookern", "Spirit Visage", "Force of Nature", "Frozen Heart", "Randuin's Omen", "Dead Man's Plate", "Black Cleaver", "Trinity Force", "Stridebreaker", "Titanic Hydra", "Ravenous Hydra", "Spear of Shojin", "Sundered Sky", "Eclipse", "Sterak's Gage", "Hullbreaker", "Experimental Hexplate", "Death's Dance", "Maw of Malmortius", "Guardian Angel"],
         boots: ["Berserker's Greaves", "Ionian Boots of Lucidity", "Mercury's Treads", "Plated Steelcaps", "Sorcerer's Shoes", "Swiftness Boots"],
         starters: ["Doran's Blade", "Doran's Ring", "Doran's Shield", "Dark Seal", "Cull", "Tear of the Goddess"],
+        aramStarters: ["Guardian's Blade", "Guardian's Hammer", "Guardian's Horn", "Guardian's Orb"],
         jgStarters: ["Gustwalker Hatchling", "Mosstomper Seedling", "Scorchclaw Pup"],
         suppFinals: ["Celestial Opposition", "Dream Maker", "Zaz'Zak's Realmspike", "Bloodsong", "Sleigh of Hand"],
         summs: ["SummonerFlash", "SummonerDot", "SummonerExhaust", "SummonerTeleport", "SummonerHaste", "SummonerHeal", "SummonerBarrier", "SummonerBoost", "SummonerSmite"],
+aramSumms: ["SummonerFlash", "SummonerSnowURFSnowball_Mark", "SummonerHeal", "SummonerExhaust", "SummonerHaste", "SummonerBarrier", "SummonerDot", "SummonerBoost", "SummonerMana"],
         stats: [
             [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Attack Speed", i: "StatModsAttackSpeedIcon"}, {n: "Ability Haste", i: "StatModsCDRScalingIcon"}], 
             [{n: "Adaptive Force", i: "StatModsAdaptiveForceIcon"}, {n: "Move Speed", i: "StatModsMovementSpeedIcon"}, {n: "Scaling Health", i: "StatModsHealthScalingIcon"}], 
             [{n: "Flat Health", i: "StatModsHealthPlusIcon"}, {n: "Tenacity & Slow Resist", i: "StatModsTenacityIcon"}, {n: "Scaling Health", i: "StatModsHealthScalingIcon"}] 
         ]
     };
+
+    function setMode(mode) {
+        currentAppMode = mode;
+        document.getElementById('mode-sr').classList.toggle('active', mode === 'SR');
+        document.getElementById('mode-aram').classList.toggle('active', mode === 'ARAM');
+        
+        const roleSelector = document.getElementById('role-selector');
+        const aramAction = document.getElementById('aram-action-container');
+        const teamBtn = document.getElementById('main-team-btn');
+        
+        if (mode === 'ARAM') {
+            roleSelector.style.display = 'none';
+            aramAction.style.display = 'flex';
+            teamBtn.style.display = 'none';
+        } else {
+            roleSelector.style.display = 'flex';
+            aramAction.style.display = 'none';
+            teamBtn.style.display = 'block';
+            teamBtn.innerHTML = "TEAM";
+        }
+        document.getElementById('results-container').innerHTML = '';
+    }
 
     function populateChampSelect() {
         const select = document.getElementById('champ-select');
@@ -343,9 +369,10 @@
     }
 
     function reroll() {
-        if (lastSelectedMode === 'TEAM') generateTeam();
+        if (currentAppMode === 'ARAM') generateTeam();
+        else if (lastSelectedMode === 'TEAM') generateTeam();
         else if (lastSelectedMode) generate(lastSelectedMode);
-        else alert("Pick a mode first!");
+        else alert("Pick a mode or role first!");
     }
 
     async function generateTeam() {
@@ -353,15 +380,18 @@
         const loader = document.getElementById('loading-screen');
         loader.style.display = 'flex';
         document.getElementById('results-container').innerHTML = '';
+        
+        let count = currentAppMode === 'ARAM' ? 1 : 5;
         const roles = ['TOP', 'JG', 'MID', 'ADC', 'SUPP'];
         let tempChamps = [...data.champions];
-        let teamChamps = [];
-        for(let i=0; i<5; i++) {
+        
+        for(let i=0; i < count; i++) {
             let index = Math.floor(Math.random() * tempChamps.length);
-            teamChamps.push(tempChamps.splice(index, 1)[0]);
-        }
-        for(let i=0; i < roles.length; i++) {
-            await createResultCard(roles[i], teamChamps[i]);
+            let champ = tempChamps.splice(index, 1)[0];
+            let lockedChamp = document.getElementById('champ-select').value;
+            let finalChamp = (lockedChamp !== "RANDOM" && i === 0) ? lockedChamp : champ;
+            
+            await createResultCard(currentAppMode === 'ARAM' ? 'ARAM' : roles[i], finalChamp);
         }
         loader.style.display = 'none';
     }
@@ -373,8 +403,6 @@
         document.getElementById('results-container').innerHTML = '';
         
         let actualRole = role === 'FILL' ? getRandom(['TOP', 'JG', 'MID', 'ADC', 'SUPP']) : role;
-        
-        // Use dropdown value if not "RANDOM"
         const lockedChamp = document.getElementById('champ-select').value;
         const finalChamp = lockedChamp === "RANDOM" ? getRandom(data.champions) : lockedChamp;
 
@@ -394,8 +422,13 @@
         } catch (e) { console.error("Skills fetch failed", e); }
 
         let s1, s2;
-        if (role === 'JG') { s1 = "SummonerSmite"; s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); }
-        else {
+        if (role === 'ARAM') {
+s1 = getRandom(data.aramSumms);
+    s2 = getRandom(data.aramSumms.filter(s => s !== s1));
+        } else if (role === 'JG') { 
+            s1 = "SummonerSmite"; 
+            s2 = getRandom(data.summs.filter(s => s !== "SummonerSmite")); 
+        } else {
             const pool = data.summs.filter(s => s !== "SummonerSmite");
             s1 = getRandom(pool); s2 = getRandom(pool.filter(s => s !== s1));
         }
@@ -411,12 +444,16 @@
         const s2Rune = getRandom(secondaryTree.slots[sRows[1]].runes);
 
         let build = [];
-        let itemPool = [...data.items];
-        if (role === 'JG') build.push(getRandom(data.jgStarters));
+        let itemPool = currentAppMode === 'ARAM' ? data.items.filter(it => it !== "Guardian Angel") : [...data.items];
+        
+        if (role === 'ARAM') build.push(getRandom(data.aramStarters));
+        else if (role === 'JG') build.push(getRandom(data.jgStarters));
         else if (role === 'SUPP') build.push("World Atlas");
         else build.push(getRandom(data.starters));
+        
         build.push(getRandom(data.boots));
         if (role === 'SUPP') build.push(getRandom(data.suppFinals));
+        
         let extraItems = (role === 'SUPP') ? 4 : (role === 'ADC' ? 6 : 5);
         for(let i = 0; i < extraItems; i++) {
             let item = getRandom(itemPool);
@@ -429,23 +466,23 @@
         card.className = 'result-card';
         card.innerHTML = `
             <div class="column">
-                <div class="result-item" style="font-size: 1.1rem; font-weight: bold; color: #fff; display: flex; align-items: baseline;">
-                    <span class="label" style="display: inline; margin-right: 0.5rem;">ROLE:</span>
-                    <span>${role}</span>
+                <div style="margin-bottom: 1rem; font-weight: bold; color: #fff;">
+                    <span class="label">Role</span>
+                    <span style="font-size: 1.1rem;">${role}</span>
                 </div>
                 <div class="result-item">
                     <span class="label">Champion</span>
                     <div class="champ-container">
                         <img class="icon-large" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${champId}.png">
-                        <span class="res-champ" style="font-size: 1.4rem; font-weight: bold; color: #fff;">${champ}</span>
+                        <span style="font-size: 1.4rem; font-weight: bold; color: #fff;">${champ}</span>
                     </div>
                 </div>
                 <div class="result-item">
                     <span class="label">Summoner Spells</span>
                     <div style="display: flex; gap: 0.6rem; align-items: center;">
-                        <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1}.png">
-                        <span style="color: var(--gold); font-weight: bold; margin: 0 0.3rem;">/</span>
-                        <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2}.png">
+                        <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s1 === 'SummonerSnowURFSnowball_Mark' ? 'SummonerSnowball' : s1}.png">
+                        <span style="color: var(--gold); font-weight: bold;">/</span>
+                        <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s2 === 'SummonerSnowURFSnowball_Mark' ? 'SummonerSnowball' : s2}.png">
                     </div>
                 </div>
                 <div class="result-item">
@@ -456,7 +493,7 @@
                                 <img class="skill-icon" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/spell/${s.img}">
                                 <span class="skill-letter">${s.key}</span>
                             </div>
-                            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold; margin-bottom: 1.8rem;">&gt;</span>' : ''}
+                            ${i < 2 ? '<span style="color:var(--gold); font-weight:bold; margin-bottom: 15px;">&gt;</span>' : ''}
                         `).join('')}
                     </div>
                 </div>
@@ -464,60 +501,50 @@
             
             <div class="column">
                 <span class="label">Primary Runes</span>
-                <div class="rune-group">
-                    <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
-                        <img src="${runeBase}${primaryTree.icon}" style="width:1.25rem; filter:brightness(1.5);"> ${primaryTree.name}
-                    </div>
-                    <div class="minor-runes" style="margin-left: 0.5rem; font-weight: bold; color: #fff;">
-                        <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:0.3rem; margin-left: 0.5rem;">
-                        <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
-                        <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
-                        <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
-                    </div>
+                <div class="${primaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+                    <img src="${runeBase}${primaryTree.icon}" style="width:1.2rem; filter:brightness(1.5);"> ${primaryTree.name}
+                </div>
+                <div class="minor-runes" style="font-weight: bold;">
+                    <img src="${runeBase}${keystone.icon}" class="icon-rune"> ${keystone.name}
+                </div>
+                <div class="minor-runes"><img src="${runeBase}${p1.icon}" class="icon-rune"> ${p1.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${p2.icon}" class="icon-rune"> ${p2.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${p3.icon}" class="icon-rune"> ${p3.name}</div>
+            </div>
+
+            <div class="column">
+                <span class="label">Secondary & Stats</span>
+                <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+                    <img src="${runeBase}${secondaryTree.icon}" style="width:1.2rem; filter:brightness(1.5);"> ${secondaryTree.name}
+                </div>
+                <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
+                <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <span class="label">Shards</span>
+                    ${data.stats.map(row => {
+                        const shard = getRandom(row);
+                        return `<div class="minor-runes"><img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:1.1rem; border-radius:50%;"> ${shard.n}</div>`;
+                    }).join('')}
                 </div>
             </div>
 
             <div class="column">
-                <span class="label">Secondary</span>
-                <div class="rune-group">
-                    <div class="${secondaryTree.key}" style="font-weight:bold; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
-                        <img src="${runeBase}${secondaryTree.icon}" style="width:1.25rem; filter:brightness(1.5);"> ${secondaryTree.name}
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:0.3rem; margin-left: 0.5rem;">
-                        <div class="minor-runes"><img src="${runeBase}${s1Rune.icon}" class="icon-rune"> ${s1Rune.name}</div>
-                        <div class="minor-runes"><img src="${runeBase}${s2Rune.icon}" class="icon-rune"> ${s2Rune.name}</div>
-                    </div>
-                    <div class="stat-nodes">
-                        <span class="shard-label">Shards</span>
-                        ${data.stats.map(row => {
-                            const shard = getRandom(row);
-                            return `<div class="minor-runes"><img src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/${shard.i}.png" style="width:1.1rem; margin-right:0.6rem; border-radius:50%;"> ${shard.n}</div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            </div>
-
-            <div class="column">
-                <div class="result-item">
-                    <span class="label">Item Build</span>
-                    <ul class="build-list">
-                        ${build.map((item, idx) => `
-                            <li>
-                                <span style="width: 1.5rem; opacity: 0.5; font-size: 0.8rem;">${idx + 1}.</span>
-                                <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${itemToId[item] || '1001'}.png"> 
-                                ${item}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
+                <span class="label">Item Build</span>
+                <ul class="build-list">
+                    ${build.map((item, idx) => `
+                        <li>
+                            <span style="width: 1.5rem; opacity: 0.5; font-size: 0.75rem;">${idx + 1}</span>
+                            <img class="icon-inline" src="https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/item/${itemToId[item] || '1001'}.png"> 
+                            ${item}
+                        </li>
+                    `).join('')}
+                </ul>
             </div>
         `;
         document.getElementById('results-container').appendChild(card);
     }
     
-    // Initialize
     populateChampSelect();
     loadRunes();
 </script>
